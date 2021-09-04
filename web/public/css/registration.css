@@ -1,0 +1,106 @@
+@import url('fonts.css');
+
+body {
+    margin: 0;
+    background: #f4f4f4;
+}
+
+#content_container {
+    margin: 0 auto;
+}
+
+/* Content */
+
+.registration_block {
+    background: #ffffff;
+    margin: 90px auto 0 auto;
+    box-shadow: 0px 2px 8px -3px rgba(34, 60, 80, 0.2);
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.registration_block p {
+    font-family: 'Nunito';
+    margin: 0;
+}
+
+.registration_block .title {
+    font-size: 22px;
+}
+
+.registration_block form {
+    margin-top: 30px;
+}
+
+.registration_block form input {
+    margin: 10px 0 23px 0;
+    border: 1px solid #0000001f;
+    padding: 10px;
+    width: 94.9%;
+    outline: none;
+    transition: 0.2s;
+}
+
+.registration_block form input:focus {
+    border: 1px solid rgba(56, 136, 255, 0.664);
+}
+
+.registration_block form p {
+    font-size: 15px;
+}
+
+.registration_block form button {
+    background: #558cb7;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 50px;
+    color: #ffffff;
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+/* Authorization link */
+
+.authorization_link {
+    background: #ffffff;
+    margin: 20px auto 50px auto;
+    box-shadow: 0px 2px 8px -3px rgba(34, 60, 80, 0.2);
+    padding: 22px;
+    box-sizing: border-box;
+    text-align: center;
+    font-family: 'RobotoR';
+    font-size: 14px;
+}
+
+.authorization_link a {
+    color: rgb(68, 119, 196);
+    text-decoration: none;
+}
+
+/* Register with soc */
+
+.register_with_soc {
+    margin-top: 25px;
+}
+
+.register_with_soc .soc_links {
+    color: #00000073;
+    font-size: 30px;
+    margin: 10px 10px 0 0;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.register_with_soc .gmail, .register_with_soc .facebook {
+    font-size: 28px;
+}
+
+.register_with_soc .gmail:hover {
+    color: rgb(224, 100, 100);
+}
+
+.register_with_soc .facebook:hover {
+    color: rgb(100, 139, 224);
+}

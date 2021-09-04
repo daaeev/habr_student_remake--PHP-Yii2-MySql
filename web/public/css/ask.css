@@ -1,0 +1,184 @@
+@import url('fonts.css');
+@import url('aside.css');
+body {
+    background: #dee1e5;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+#content_container {
+    display: flex;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Header */
+
+header {
+    background: #303b44;
+    height: 50px;
+    width: 100vw;
+}
+
+header .header_block {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 3%;
+}
+
+header .header_block .logo {
+    width: 127px;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 27px;
+    font-family: 'Nunito';
+}
+
+header .header_block .logo span {
+    padding-left: 5px;
+}
+
+header .header_block .ask_question {
+    text-align: center;
+    line-height: 30px;
+    color: #ffffff;
+    margin-left: auto;
+    font-family: 'Nunito';
+    font-size: 14px;
+    width: 150px;
+    height: 30px;
+    background: #65c178;
+    border-radius: 5px;
+}
+
+header .header_block .ask_question:hover {
+    background: #56a766;
+}
+
+/* Content */
+
+content {
+    flex: 1 1;
+    background: #ffffff;
+    padding: 20px 40px 100px 40px;
+    box-sizing: border-box;
+}
+
+#ask .upper-title_ask {
+    margin: 0;
+    font-family: 'Nunito';
+    font-size: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #00000013;
+}
+
+/* Form */
+
+#ask .ask_form {
+    margin-top: 25px;
+}
+
+#ask .ask_form .field-label {
+    font-family: 'Roboto';
+    margin: 10px 0;
+}
+
+#ask .ask_form .field-prompt {
+    color: #00000067;
+    font-family: 'IBM';
+    font-size: 15px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+#ask .ask_form .field {
+    display: block;
+    outline: none;
+    border: 1px solid #0000002d;
+    border-radius: 3px;
+    width: 100%;
+    height: 30px;
+    font-size: 18px;
+    padding: 2px 5px;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+#ask .ask_form .list {
+    font-size: 15px;
+    width: 20%;
+}
+
+#ask .ask_form .field:focus {
+    border: 1px solid rgb(59, 167, 230);
+}
+
+#ask .ask_form .field_block {
+    margin-bottom: 40px;
+}
+
+#ask .form {
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+#ask .form .form_helper {
+    border: 1px solid #0000002f;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    background: #ffffff;
+    display: flex;
+}
+
+#ask .form .form_helper button:nth-child(1) {
+    border-radius: 5px 0 0 0;
+}
+
+#ask .form .form_helper button {
+    background: #ffffff;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-right: 1px solid #0000002f;
+    outline: none;
+    cursor: pointer;
+}
+
+#ask .form .form_helper button:hover {
+    color: rgb(29, 126, 218);
+}
+
+#ask .form .form_help_block textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    border-radius: 0 0 5px 5px;
+    border: 1px solid #0000002f;
+    outline: none;
+    max-height: 400px;
+    height: 200px;
+    font-family: 'RobotoR';
+    padding: 5px;
+}
+
+#ask .form .form_help_block textarea:focus {
+    border: 1px solid rgb(59, 167, 230);
+}
+
+#ask .form .form_help_block button {
+    background: none;
+    color: rgb(65, 192, 76);
+    font-family: 'Roboto';
+    outline: none;
+    border: 1px solid rgb(65, 192, 76);
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+}
