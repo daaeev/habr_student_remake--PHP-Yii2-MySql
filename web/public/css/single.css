@@ -113,19 +113,19 @@ content {
     font-size: 13px;
 }
 
-#single .question .tags .tag {
+#single .tag {
     color: rgb(134, 78, 187);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-#single .question .tags .tag img {
+#single .tag img {
     width: 12px;
     height: 12px;
     margin-right: 5px;
 }
 
-#single .question .tags .tag:hover {
+#single .tag:hover {
     text-decoration: underline;
 }
 

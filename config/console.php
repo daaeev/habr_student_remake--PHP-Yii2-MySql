@@ -1,6 +1,5 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
@@ -27,7 +26,6 @@ $config = [
         ],
         'db' => $db,
     ],
-    'params' => $params,
     /*
     'controllerMap' => [
         'fixture' => [ // Fixture generation command line.

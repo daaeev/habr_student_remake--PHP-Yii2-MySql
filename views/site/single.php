@@ -211,7 +211,7 @@
     <div class="questions_block">
         <div class="question">
             <div class="info_block">
-                <a href="" class="tag">windows</a><span class="tags_counter">+1</span>
+                <a href="" class="tag"><img src="public/img/tag.jpg" alt="tag">windows</a><span class="tags_counter">+1</span>
                 <span class="сomplexity"><i class="bi bi-speedometer2 easy"></i>Простой</span>
 
                 <p class="title"><a href="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, animi!</a></p>
@@ -228,7 +228,7 @@
 
         <div class="question">
             <div class="info_block">
-                <a href="" class="tag">windows</a><span class="tags_counter">+1</span>
+                <a href="" class="tag"><img src="public/img/tag.jpg" alt="tag">windows</a><span class="tags_counter">+1</span>
                 <span class="сomplexity"><i class="bi bi-speedometer2 easy"></i>Простой</span>
 
                 <p class="title"><a href="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, animi!</a></p>
@@ -245,7 +245,7 @@
 
         <div class="question">
             <div class="info_block">
-                <a href="" class="tag">windows</a><span class="tags_counter">+1</span>
+                <a href="" class="tag"><img src="public/img/tag.jpg" alt="tag">windows</a><span class="tags_counter">+1</span>
                 <span class="сomplexity"><i class="bi bi-speedometer2 easy"></i>Простой</span>
 
                 <p class="title"><a href="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, animi!</a></p>
