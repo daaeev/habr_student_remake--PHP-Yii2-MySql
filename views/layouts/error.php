@@ -1,4 +1,8 @@
-<?php $this->beginPage() ?>
+<?php
+
+
+$this->beginPage();
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,16 +11,14 @@
         $this->registerMetaTag(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
         $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0']);
         app\assets\WithoutPanelAsset::register($this);
-
         $this->head();
     ?>
 </head>
-<body>
+<body id="error">
 <?php $this->beginBody() ?>
-    <div id="content_container">
-        <?= $content ?>
+    <div class="error_block">
+            <?= $content ?>
     </div>
-
 <?php $this->endBody() ?>
 </body>
 </html>

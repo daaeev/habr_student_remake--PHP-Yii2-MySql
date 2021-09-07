@@ -8,23 +8,44 @@ class SiteController extends Controller
 {
     public $layout = 'main';
     
-    public function actionIndex() {
+    public function actionIndex()
+    {
         return $this->render('index');
     }
 
-    public function actionMy() {
+    public function actionMy()
+    {
         return $this->render('index');
     }
 
-    public function actionSingle() {
+    public function actionSingle()
+    {
         return $this->render('single');
     }
 
-    public function actionTags() {
+    public function actionTags()
+    {
         return $this->render('tags');
     }
 
-    public function actionCreateQuestion() {
+    public function actionTag()
+    {
+        return $this->render('index');
+    }
+
+    public function actionCreateQuestion()
+    {
         return $this->render('ask_question');
+    }
+
+    public function actionError()
+    {
+        $this->layout = 'error';
+        return $this->render('error');
+    }
+
+    public function actionRbac()
+    {
+
     }
 }

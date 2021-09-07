@@ -14,6 +14,9 @@ $config = [
         'request' => [
             'cookieValidationKey' => 'T_wmilelycM96lY97D6wkcstPKJCglEx',
         ],
+        'errorHandler' => [
+            'errorAction' => 'site/error',
+        ],
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
@@ -38,8 +41,9 @@ $config = [
                 '' => 'site/index',
                 'questions/<category:\D{3,11}>' => 'site/index',
                 'my/<category:\D{0,11}>' => 'site/my',
-                '<id:\d+>' => 'site/single',
+                'q/<id:\d+>' => 'site/single',
                 'tags' => 'site/tags',
+                't/<id:\d+>' => 'site/tag',
                 'ask' => 'site/create-question',
                 'login' => 'authorization/login',
                 'registration' => 'authorization/registration',
