@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Yii;
 use yii\web\Controller;
 
 class SiteController extends Controller
@@ -42,10 +43,5 @@ class SiteController extends Controller
     {
         $this->layout = 'error';
         return $this->render('error');
-    }
-
-    public function actionRbac()
-    {
-
     }
 }

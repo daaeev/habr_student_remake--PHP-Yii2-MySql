@@ -10,6 +10,12 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\Module',
+            'layout' => '@app/views/layouts/admin',
+        ],
+    ],
     'components' => [
         'request' => [
             'cookieValidationKey' => 'T_wmilelycM96lY97D6wkcstPKJCglEx',
@@ -18,6 +24,7 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'user' => [
+            'loginUrl' => '/login',
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
@@ -29,6 +36,9 @@ $config = [
                     'levels' => ['error', 'warning'],
                 ],
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
