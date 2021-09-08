@@ -18,8 +18,8 @@ class UserToCommentLike extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'comment_id'], 'integer'],
-            [['comment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Comments::className(), 'targetAttribute' => ['comment_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['comment_id'], 'exist', 'skipOnError' => true, 'targetClass' => Comments::class, 'targetAttribute' => ['comment_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -42,7 +42,7 @@ class UserToCommentLike extends \yii\db\ActiveRecord
      */
     public function getComment()
     {
-        return $this->hasOne(Comments::className(), ['id' => 'comment_id']);
+        return $this->hasOne(Comments::class, ['id' => 'comment_id']);
     }
 
     /**
@@ -52,6 +52,6 @@ class UserToCommentLike extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

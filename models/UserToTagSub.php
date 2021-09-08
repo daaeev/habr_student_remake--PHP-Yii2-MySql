@@ -21,8 +21,8 @@ class UserToTagSub extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'tag_id'], 'integer'],
-            [['tag_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tags::className(), 'targetAttribute' => ['tag_id' => 'id']],
-            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['tag_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tags::class, 'targetAttribute' => ['tag_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -45,7 +45,7 @@ class UserToTagSub extends \yii\db\ActiveRecord
      */
     public function getTag()
     {
-        return $this->hasOne(Tags::className(), ['id' => 'tag_id']);
+        return $this->hasOne(Tags::class, ['id' => 'tag_id']);
     }
 
     /**
@@ -55,6 +55,6 @@ class UserToTagSub extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return $this->hasOne(User::className(), ['id' => 'user_id']);
+        return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 }

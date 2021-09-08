@@ -24,7 +24,7 @@ class Question extends \yii\db\ActiveRecord
             [['author_id', 'status', 'viewed'], 'integer'],
             [['pub_date'], 'safe'],
             [['title', 'difficulty'], 'string', 'max' => 255],
-            [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_id' => 'id']],
+            [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
 
@@ -52,7 +52,7 @@ class Question extends \yii\db\ActiveRecord
      */
     public function getAuthor()
     {
-        return $this->hasOne(User::className(), ['id' => 'author_id']);
+        return $this->hasOne(User::class, ['id' => 'author_id']);
     }
 
     /**
@@ -62,7 +62,7 @@ class Question extends \yii\db\ActiveRecord
      */
     public function getComments()
     {
-        return $this->hasMany(Comments::className(), ['question_id' => 'id']);
+        return $this->hasMany(Comments::class, ['question_id' => 'id']);
     }
 
     /**
@@ -72,7 +72,7 @@ class Question extends \yii\db\ActiveRecord
      */
     public function getQuestionToTagTags()
     {
-        return $this->hasMany(QuestionToTagTags::className(), ['question_id' => 'id']);
+        return $this->hasMany(QuestionToTagTags::class, ['question_id' => 'id']);
     }
 
     /**
@@ -82,6 +82,6 @@ class Question extends \yii\db\ActiveRecord
      */
     public function getUserToQuestionSubs()
     {
-        return $this->hasMany(UserToQuestionSub::className(), ['question_id' => 'id']);
+        return $this->hasMany(UserToQuestionSub::class, ['question_id' => 'id']);
     }
 }

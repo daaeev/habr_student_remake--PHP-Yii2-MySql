@@ -17,8 +17,8 @@ class Comments extends \yii\db\ActiveRecord
             [['content'], 'string'],
             [['author_id', 'question_id', 'comment_kind', 'parent_comment_id'], 'integer'],
             [['pub_date'], 'safe'],
-            [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['author_id' => 'id']],
-            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
+            [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
+            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::class, 'targetAttribute' => ['question_id' => 'id']],
         ];
     }
 
@@ -37,16 +37,16 @@ class Comments extends \yii\db\ActiveRecord
 
     public function getAuthor()
     {
-        return $this->hasOne(User::className(), ['id' => 'author_id']);
+        return $this->hasOne(User::class, ['id' => 'author_id']);
     }
 
     public function getQuestion()
     {
-        return $this->hasOne(Question::className(), ['id' => 'question_id']);
+        return $this->hasOne(Question::class, ['id' => 'question_id']);
     }
 
     public function getUserToCommentLikes()
     {
-        return $this->hasMany(UserToCommentLike::className(), ['comment_id' => 'id']);
+        return $this->hasMany(UserToCommentLike::class, ['comment_id' => 'id']);
     }
 }

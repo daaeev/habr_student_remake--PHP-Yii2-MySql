@@ -11,14 +11,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return 'user';
     }
 
-    public function rules()
-    {
-        return [
-            [['status'], 'integer'],
-            [['name', 'image', 'email', 'password'], 'string', 'max' => 255],
-        ];
-    }
-
     public function attributeLabels()
     {
         return [
@@ -58,26 +50,26 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function getComments()
     {
-        return $this->hasMany(Comments::className(), ['author_id' => 'id']);
+        return $this->hasMany(Comments::class, ['author_id' => 'id']);
     }
 
     public function getQuestions()
     {
-        return $this->hasMany(Question::className(), ['author_id' => 'id']);
+        return $this->hasMany(Question::class, ['author_id' => 'id']);
     }
 
     public function getUserToCommentLikes()
     {
-        return $this->hasMany(UserToCommentLike::className(), ['user_id' => 'id']);
+        return $this->hasMany(UserToCommentLike::class, ['user_id' => 'id']);
     }
 
     public function getUserToQuestionSubs()
     {
-        return $this->hasMany(UserToQuestionSub::className(), ['user_id' => 'id']);
+        return $this->hasMany(UserToQuestionSub::class, ['user_id' => 'id']);
     }
 
     public function getUserToTagSubs()
     {
-        return $this->hasMany(UserToTagSub::className(), ['user_id' => 'id']);
+        return $this->hasMany(UserToTagSub::class, ['user_id' => 'id']);
     }
 }

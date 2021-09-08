@@ -21,8 +21,8 @@ class QuestionToTagTags extends \yii\db\ActiveRecord
     {
         return [
             [['question_id', 'tag_id'], 'integer'],
-            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::className(), 'targetAttribute' => ['question_id' => 'id']],
-            [['tag_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tags::className(), 'targetAttribute' => ['tag_id' => 'id']],
+            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::class, 'targetAttribute' => ['question_id' => 'id']],
+            [['tag_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tags::class, 'targetAttribute' => ['tag_id' => 'id']],
         ];
     }
 
@@ -45,7 +45,7 @@ class QuestionToTagTags extends \yii\db\ActiveRecord
      */
     public function getQuestion()
     {
-        return $this->hasOne(Question::className(), ['id' => 'question_id']);
+        return $this->hasOne(Question::class, ['id' => 'question_id']);
     }
 
     /**
@@ -55,6 +55,6 @@ class QuestionToTagTags extends \yii\db\ActiveRecord
      */
     public function getTag()
     {
-        return $this->hasOne(Tags::className(), ['id' => 'tag_id']);
+        return $this->hasOne(Tags::class, ['id' => 'tag_id']);
     }
 }

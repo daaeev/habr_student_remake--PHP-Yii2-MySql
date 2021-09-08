@@ -43,7 +43,7 @@ class Tags extends \yii\db\ActiveRecord
      */
     public function getQuestionToTagTags()
     {
-        return $this->hasMany(QuestionToTagTags::className(), ['tag_id' => 'id']);
+        return $this->hasMany(QuestionToTagTags::class, ['tag_id' => 'id']);
     }
 
     /**
@@ -53,6 +53,6 @@ class Tags extends \yii\db\ActiveRecord
      */
     public function getUserToTagSubs()
     {
-        return $this->hasMany(UserToTagSub::className(), ['tag_id' => 'id']);
+        return $this->hasMany(UserToTagSub::class, ['tag_id' => 'id']);
     }
 }
