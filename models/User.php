@@ -11,6 +11,13 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return 'user';
     }
 
+    public function rules()
+    {
+        return [
+            ['image', 'default', 'value' => 'author.png'],
+        ];
+    }
+
     public function attributeLabels()
     {
         return [
@@ -28,24 +35,24 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return static::findOne($id);
     }
 
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
-        return static::findOne(['access_token' => $token]);
-    }
-
     public function getId()
     {
         return $this->id;
     }
+    
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO...
+    }
 
     public function getAuthKey()
     {
-        return $this->authKey;
+        // TODO...
     }
 
     public function validateAuthKey($authKey)
     {
-        return $this->authKey === $authKey;
+        // TODO...
     }
 
     public function getComments()

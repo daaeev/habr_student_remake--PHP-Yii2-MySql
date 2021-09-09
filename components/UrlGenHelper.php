@@ -22,4 +22,19 @@ class UrlGenHelper {
     {
         return '/' . $route;
     }
+
+    public static function login()
+    {
+        return '/login';
+    }
+
+    public static function registration()
+    {
+        return '/registration';
+    }
+
+    public static function logout()
+    {
+        return '/logout';
+    }
 }

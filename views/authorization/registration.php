@@ -1,6 +1,8 @@
 <?php
 
 use app\components\UrlGenHelper;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 ?>
 <div class="registration_block">
@@ -13,21 +15,28 @@ use app\components\UrlGenHelper;
         <a class="soc_links gmail" href=""><i class="bi bi-google"></i></a>
     </div>
 
-    <form>
-        <p>E-mail</p>
-        <input type="text">
+    <?php $form = ActiveForm::begin() ?>
 
-        <p>Никнейм</p>
-        <input type="text">
+    <div class="field">
+        <?= $form->field($model, 'email') ?>
+    </div>
 
-        <p>Пароль</p>
-        <input type="password">
+    <div class="field">
+        <?= $form->field($model, 'login')->input('text', ['autocomplete' => 'off']) ?>
+    </div>
 
-        <p>Подтвердите пароль</p>
-        <input type="password">
+    <div class="field">
+        <?= $form->field($model, 'password')->passwordInput() ?>
+    </div>
 
-        <button type="submit">Зарегистрироваться</button>
-    </form>
+    <div class="field">
+        <?= $form->field($model, 'password_repeat')->passwordInput() ?>
+    </div>
+
+    <?= Html::submitButton('Зарегистрироваться') ?>
+
+    <?php ActiveForm::end() ?>
+
 </div>
 
-<p class="authorization_link">Уже зарегистрированы? <a href=<?= UrlGenHelper::simpleRoute('login') ?>>Войдите</a></p>
+<p class="authorization_link">Уже зарегистрированы? <a href=<?= UrlGenHelper::login() ?>>Войдите</a></p>

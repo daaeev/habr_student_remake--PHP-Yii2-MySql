@@ -1,20 +1,26 @@
 <?php
 
 use app\components\UrlGenHelper;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 ?>
 <div class="login_form_block">
     <p class="title">Вход</p>
 
-    <form>
-        <p>E-mail</p>
-        <input type="text">
+    <?php $form = ActiveForm::begin() ?>
 
-        <p>Пароль</p>
-        <input type="password">
+    <div class="field">
+        <?= $form->field($model, 'email') ?>
+    </div>
 
-        <button type="submit">Войти</button>
-    </form>
+    <div class="field">
+        <?= $form->field($model, 'password')->passwordInput() ?>
+    </div>
+
+    <?= Html::submitButton('Войти') ?>
+
+    <?php $form = ActiveForm::end() ?>
 
     <a href="" class="forgot_password">Забыли пароль?</a>
 
@@ -26,4 +32,4 @@ use app\components\UrlGenHelper;
     </div>
 </div>
 
-<p class="registration_link">Ещё нет аккаунта? <a href=<?= UrlGenHelper::simpleRoute('registration') ?>>Зарегистрируйтесь</a></p>
+<p class="registration_link">Ещё нет аккаунта? <a href=<?= UrlGenHelper::registration() ?>>Зарегистрируйтесь</a></p>
