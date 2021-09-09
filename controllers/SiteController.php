@@ -3,11 +3,29 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class SiteController extends Controller
 {
     public $layout = 'main';
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['create-question'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['create-question'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
     
     public function actionIndex()
     {
