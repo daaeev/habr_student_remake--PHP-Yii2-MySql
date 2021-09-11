@@ -4,7 +4,11 @@ namespace app\components;
 
 use yii\helpers\Url;
 
-class UrlGenHelper {
+class UrlGenHelper
+{
+    /*
+       Generate URLs for links to determine the type of questions to display
+    */
     public static function categorySetting($category)
     {
         if((explode('/', \Yii::$app->request->pathInfo))[0] === 'my') {
@@ -36,5 +40,10 @@ class UrlGenHelper {
     public static function logout()
     {
         return '/logout';
+    }
+
+    public static function adminPanel()
+    {
+        return '/admin/user';
     }
 }

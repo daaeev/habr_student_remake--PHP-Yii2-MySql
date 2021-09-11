@@ -2,17 +2,17 @@
 
 namespace app\rules;
 
-use app\models\User;
 use yii\rbac\Rule;
+use app\models\User;
 
-class AdminPanelRule extends Rule 
+class roleAssignmentRule extends Rule
 {
-    public $name = 'AdminPanelAccess';
+    public $name = 'roleAssignmentRule';
 
     public function execute($user_id, $item, $params)
     {
         $user = $user_id ? User::findIdentity($user_id) : null;
-        if (!empty($user) && $user->status > 0 && $user->status < 3) {
+        if (!empty($user) && $user->status == 1) {
             return true;
         }
         return false;

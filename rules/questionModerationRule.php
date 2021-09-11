@@ -2,12 +2,12 @@
 
 namespace app\rules;
 
-use app\models\User;
 use yii\rbac\Rule;
+use app\models\User;
 
-class AdminPanelRule extends Rule 
+class questionModerationRule extends Rule
 {
-    public $name = 'AdminPanelAccess';
+    public $name = 'questionModerationRule';
 
     public function execute($user_id, $item, $params)
     {

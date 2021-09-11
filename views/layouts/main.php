@@ -39,6 +39,9 @@ $this->beginPage();
                     <?php endif ?>
                         <a href=<?= UrlGenHelper::simpleRoute('questions/noanswer') ?> class="l_sidebar_link"><i class="bi bi-question-square"></i><span>Все вопросы</span></a>
                         <a href=<?= UrlGenHelper::simpleRoute('tags') ?> class="l_sidebar_link"><i class="bi bi-tag"></i><span>Все теги</span></a>
+                    <?php if (\Yii::$app->user->can('adminPanel')): ?>    
+                        <a href=<?= UrlGenHelper::adminPanel() ?> class="l_sidebar_link"><i class="bi bi-sliders"></i><span>Админ панель</span></a>
+                    <?php endif ?>  
                 </div>
 
                 <div class="footer_block">

@@ -2,30 +2,16 @@
 
 namespace app\modules\admin\controllers;
 
+use Yii;
+use app\components\RoleHelper;
 use app\models\User;
 use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 class UserController extends Controller
 {
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
-
-    public function actionIndex()
+   public function actionIndex()
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
@@ -41,6 +27,26 @@ class UserController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    public function actionRole($id)
+    {
+        $roles = RoleHelper::getRoles();
+
+        /*
+           Role attachment if the form was submitted
+        */
+        if ($attributes = Yii::$app->request->post()) {
+            Yii::$app->authManager->revokeAll($id);
+            $user = $this->findModel($attributes['user_id']);
+
+            RoleHelper::setUserRole($attributes['role'], $attributes['user_id']);
+            RoleHelper::setUserStatus($user, $roles, $attributes['role']);
+
+            return $this->redirect(['/admin/user/view', 'id' => $attributes['user_id']]);
+        }
+
+        return $this->render('role', compact('id', 'roles'));
     }
 
     protected function findModel($id)

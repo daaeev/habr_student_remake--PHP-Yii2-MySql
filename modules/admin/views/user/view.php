@@ -16,15 +16,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Set role', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Ban', ['ban', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => 'Are you sure?',
-                    'method' => 'post',
-                ],
-            ]) 
-        ?>
+        <?php if (\Yii::$app->user->can('roleAssignment')): ?>
+            <?= Html::a('Set role', ['role', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php endif ?>
     </p>
 
     <?= DetailView::widget([
