@@ -1,26 +1,39 @@
+<?php
+
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+
+?>
 <content id="ask">
     <p class="upper-title_ask">Новый вопрос</p>
 
-    <form action="" class="ask_form">
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'class' => 'ask_form',
+        ],
+    ]) ?>
         <div class="field_block">
             <p class="field-label">Суть вопроса</p>
             <span class="field-prompt">Сформулируйте вопрос так, чтобы сразу было понятно, о чём речь.</span>
-            <input type="text" class="field">
+            <?= $form->field($model, 'essence')->input('text', ['class' => 'field', 'autocomplete' => 'off']) ?>
         </div>
 
         <div class="field_block">
             <p class="field-label">Теги вопроса</p>
             <span class="field-prompt">Укажите от 1 до 5 тегов — предметных областей, к которым вопрос относится.</span>
-            <input type="text" class="field">
+            <?= $form->field($model, 'tags')->input('text', ['class' => 'field', 'autocomplete' => 'off']) ?>
         </div>
 
         <div class="field_block">
             <p class="field-label">Сложность вопроса</p>
-            <select class="field list">
-                <option>Простой</option>
-                <option>Средний</option>
-                <option>Сложный</option>
-            </select>
+            <?= 
+                $form->field($model, 'difficulty')->dropDownList([
+                    'Простой' => 'Простой', 
+                    'Средний' => 'Средний', 
+                    'Сложный' => 'Сложный',
+                ],
+                    ['class' => 'field list']) 
+            ?>
         </div>
 
         <div class="field_block">
@@ -28,16 +41,16 @@
             <span class="field-prompt">Опишите в подробностях свой вопрос, чтобы получить более точный ответ.</span>
             <div class="form">
                 <div class="form_helper">
-                    <button type="button">B</button>
-                    <button type="button">B</button>
-                    <button type="button">B</button>
+                    <?= Html::button('B') ?>
+                    <?= Html::button('B') ?>
+                    <?= Html::button('B') ?>
                 </div>
 
                 <div class="form_help_block">
-                    <textarea></textarea>
-                    <button type="submit">Опубликовать</button>
+                    <?= $form->field($model, 'content')->textarea() ?>
+                    <?= Html::submitButton('Опубликовать') ?>
                 </div>
             </div>
         </div>
-    </form>
+    <?php ActiveForm::end() ?> 
 </content>

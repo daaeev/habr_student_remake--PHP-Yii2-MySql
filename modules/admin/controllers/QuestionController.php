@@ -6,25 +6,9 @@ use app\models\Question;
 use app\models\QuestionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 class QuestionController extends Controller
 {
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
-
     public function actionIndex()
     {
         $searchModel = new QuestionSearch();
@@ -43,6 +27,16 @@ class QuestionController extends Controller
         ]);
     }
 
+    public function actionApprove($id)
+    {
+        $this->setStatus($this->findModel($id), 1);
+    }
+
+    public function actionBan($id)
+    {
+        $this->setStatus($this->findModel($id), 2);
+    }
+
     protected function findModel($id)
     {
         if (($model = Question::findOne($id)) !== null) {
@@ -50,5 +44,13 @@ class QuestionController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    private function setStatus(Question $question, int $status)
+    {
+        $question->status = $status;
+        $question->save(false);
+
+        $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }

@@ -3,8 +3,11 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\AskForm;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use app\components\UrlGenHelper;
+use app\rules\AssignmentRule;
 
 class SiteController extends Controller
 {
@@ -54,7 +57,13 @@ class SiteController extends Controller
 
     public function actionCreateQuestion()
     {
-        return $this->render('ask_question');
+        $model = new AskForm;
+
+        if ($model->load(Yii::$app->request->post(), 'AskForm') && $model->createQuestion()) {
+            return $this->redirect(UrlGenHelper::home());
+        }
+
+        return $this->render('ask_question', compact('model'));
     }
 
     public function actionError()

@@ -16,14 +16,27 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Ban', ['ban', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
+        <?php if (\Yii::$app->user->can('assignment')): ?>
+        <?=
+            Html::a('Approve', ['approve', 'id' => $model->id], [
+                'class' => 'btn btn-success',
                 'data' => [
-                    'confirm' => 'Are you sure you want to delete this item?',
+                    'confirm' => 'Are you sure?',
                     'method' => 'post',
                 ],
-            ]) 
+            ]);
         ?>
+
+        <?=
+            Html::a('Ban', ['ban', 'id' => $model->id], [
+                'class' => 'btn btn-danger',
+                'data' => [
+                    'confirm' => 'Are you sure?',
+                    'method' => 'post',
+                ],
+            ]);
+        ?>
+        <?php endif ?>
     </p>
 
     <?= DetailView::widget([

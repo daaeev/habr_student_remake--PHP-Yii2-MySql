@@ -6,38 +6,29 @@ use Yii;
 
 class Question extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'question';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
             [['content'], 'string'],
             [['author_id', 'status', 'viewed'], 'integer'],
-            [['pub_date'], 'safe'],
-            [['title', 'difficulty'], 'string', 'max' => 255],
-            [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
+            [['pub_date'], 'default', 'value' => date('d.m.Y')],
+            [['title'], 'string', 'max' => 255],
+            [['author_id'], 'exist', 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
             'title' => 'Title',
             'content' => 'Content',
-            'author_id' => 'Author ID',
+            'author_id' => 'Author',
             'status' => 'Status',
             'viewed' => 'Viewed',
             'pub_date' => 'Pub Date',
