@@ -36,6 +36,7 @@ class AskForm extends Model
         $question = new Question;
         $question->title = $this->essence;
         $question->content = $this->content;
+        $question->tags = $this->tags;
         $question->author_id = \Yii::$app->user->getId();
         $question->difficulty = $this->difficulty;
         if ($question->save()) {

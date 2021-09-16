@@ -18,11 +18,19 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-
             'id',
             'tag_name',
-            'tag_image',
-            
+            [
+                'format' => 'html',
+                'label' => 'Image',
+                'value' => function($data) {
+                    return Html::img($data->getImage(), ['width'=>40]);
+                }
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}{delete}',
+            ],
         ],
     ]); ?>
 

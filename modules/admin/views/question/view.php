@@ -22,8 +22,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'btn btn-success',
                 'data' => [
                     'confirm' => 'Are you sure?',
-                    'method' => 'post',
                 ],
+            ]);
+        ?>
+ 
+        <?=
+            Html::a('Create tags', ['create-tags', 'id' => $model->id,'tags' => $model->tags], [
+                'class' => 'btn btn-warning',
             ]);
         ?>
 
@@ -32,7 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Are you sure?',
-                    'method' => 'post',
                 ],
             ]);
         ?>
@@ -45,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'content:ntext',
+            'tags:ntext',
             'author_id',
             'status',
             'viewed',

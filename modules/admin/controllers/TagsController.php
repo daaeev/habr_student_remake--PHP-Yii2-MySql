@@ -6,25 +6,9 @@ use app\models\Tags;
 use app\models\TagsSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 class TagsController extends Controller
 {
-    public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
-                ],
-            ]
-        );
-    }
-
     public function actionIndex()
     {
         $searchModel = new TagsSearch();
@@ -41,6 +25,18 @@ class TagsController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    public function actionDelete($id)
+    {
+        $tag = $this->findModel($id);
+
+        if ($tag->tag_image != 'tag.jpg') {
+            unlink(substr($tag->getImage(), 1));
+        }
+
+        $tag->delete();
+        return $this->redirect('index');
     }
 
     protected function findModel($id)

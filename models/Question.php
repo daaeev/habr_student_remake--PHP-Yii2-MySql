@@ -14,7 +14,7 @@ class Question extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['content'], 'string'],
+            [['content', 'tags'], 'string'],
             [['author_id', 'status', 'viewed'], 'integer'],
             [['pub_date'], 'default', 'value' => date('d.m.Y')],
             [['title'], 'string', 'max' => 255],

@@ -21,8 +21,8 @@ class QuestionToTagTags extends \yii\db\ActiveRecord
     {
         return [
             [['question_id', 'tag_id'], 'integer'],
-            [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::class, 'targetAttribute' => ['question_id' => 'id']],
-            [['tag_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tags::class, 'targetAttribute' => ['tag_id' => 'id']],
+            [['question_id'], 'exist', 'targetClass' => Question::class, 'targetAttribute' => ['question_id' => 'id']],
+            [['tag_id'], 'exist','targetClass' => Tags::class, 'targetAttribute' => ['tag_id' => 'id']],
         ];
     }
 
