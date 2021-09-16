@@ -14,9 +14,9 @@ use yii\helpers\Html;
 <?= Html::submitButton('Set', [
     'class' => 'btn btn-success btn-set_role',
     'data' => [
-        'confirm' => 'Are you sure?',
+            'confirm' => 'Are you sure?',
     ],
-    ]) 
+]) 
 ?>
 
 <?php $form = ActiveForm::end() ?>

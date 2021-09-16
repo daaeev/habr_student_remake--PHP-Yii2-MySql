@@ -34,8 +34,12 @@ class UserLogin extends Model
         if ($this->validate()) {
             $user = User::findOne(['email' => $this->email]);
 
+            /*
+               If the passwords match - authorize, otherwise issue an error
+            */
             if (Yii::$app->getSecurity()->validatePassword($this->password, $user->password)) {
                 Yii::$app->user->login($user);
+                
                 return true;
             }
     

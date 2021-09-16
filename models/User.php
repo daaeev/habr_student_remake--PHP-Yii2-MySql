@@ -2,9 +2,13 @@
 
 namespace app\models;
 
+use app\components\ImageInterface;
 use yii\web\IdentityInterface;
+use Yii;
 
-class User extends \yii\db\ActiveRecord implements IdentityInterface
+class User extends \yii\db\ActiveRecord implements 
+    IdentityInterface,
+    ImageInterface
 {
     public static function tableName()
     {
@@ -28,6 +32,11 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'password' => 'Password',
             'status' => 'Status',
         ];
+    }
+
+    public function getImage(): string
+    {
+        return Yii::getAlias('@web') . 'uploads/users/' . $this->image;
     }
 
     public static function findIdentity($id)

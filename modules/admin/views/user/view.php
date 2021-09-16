@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?php if (\Yii::$app->user->can('roleAssignment')): ?>
+        <?php if (\Yii::$app->user->can('assignment')): ?>
             <?= Html::a('Set role', ['role', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?php endif ?>
     </p>

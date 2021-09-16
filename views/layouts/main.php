@@ -29,18 +29,26 @@ $this->beginPage();
         <aside id="left">
                 <div class="nav_links">
                     <?php if (\Yii::$app->user->isGuest): ?>
+
                         <a href=<?= UrlGenHelper::login() ?> class="l_sidebar_link login_link"><i class="bi bi-lock"></i><span>Войти на сайт</span></a>
+
                     <?php else: ?>
+
                         <div class="profile_link_block">
-                            <a href=<?= UrlGenHelper::simpleRoute('profile') ?> class="l_sidebar_link profile_link"><img src="/public/img/author.jpg" alt="tag" class="author_img"><span><?= Html::encode(\Yii::$app->user->getIdentity()->name) ?></span></a>
+                            <a href=<?= UrlGenHelper::simpleRoute('profile') ?> class="l_sidebar_link profile_link"><img src="/public/img/author.jpg" alt="author" class="author_img"><span><?= Html::encode(\Yii::$app->user->getIdentity()->name) ?></span></a>
                             <a href=<?= UrlGenHelper::logout() ?> class="l_sidebar_link quit"><i class="bi bi-box-arrow-right"></i></a>
                         </div>
                         <a href=<?= UrlGenHelper::simpleRoute('my/') ?> class="l_sidebar_link"><i class="bi bi-card-list"></i><span>Моя лента</span></a>
+
                     <?php endif ?>
+
                         <a href=<?= UrlGenHelper::simpleRoute('questions/noanswer') ?> class="l_sidebar_link"><i class="bi bi-question-square"></i><span>Все вопросы</span></a>
                         <a href=<?= UrlGenHelper::simpleRoute('tags') ?> class="l_sidebar_link"><i class="bi bi-tag"></i><span>Все теги</span></a>
-                    <?php if (\Yii::$app->user->can('adminPanel')): ?>    
+
+                    <?php if (\Yii::$app->user->can('adminPanel')): ?>   
+                         
                         <a href=<?= UrlGenHelper::adminPanel() ?> class="l_sidebar_link"><i class="bi bi-sliders"></i><span>Админ панель</span></a>
+
                     <?php endif ?>  
                 </div>
 

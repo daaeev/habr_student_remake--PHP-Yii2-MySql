@@ -37,14 +37,18 @@ class UserRegistration extends Model
 
     public function register()
     {
+        /*
+           If the validation is successful, create a user and authorize him
+        */
         if ($this->validate()) {
-            $user = $this->createUser();
+            $user = $this->createUserFromForm();
             Yii::$app->user->login($user);
+            
             return true;
         }
     }
 
-    public function createUser()
+    private function createUserFromForm(): User
     {
         $user = new User;
         $user->name = $this->login;

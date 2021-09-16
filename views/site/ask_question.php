@@ -14,13 +14,13 @@ use yii\helpers\Html;
     ]) ?>
         <div class="field_block">
             <p class="field-label">Суть вопроса</p>
-            <span class="field-prompt">Сформулируйте вопрос так, чтобы сразу было понятно, о чём речь.</span>
+            <span class="field-prompt">Сформулируйте вопрос так, чтобы сразу было понятно, о чём речь</span>
             <?= $form->field($model, 'essence')->input('text', ['class' => 'field', 'autocomplete' => 'off']) ?>
         </div>
 
         <div class="field_block">
             <p class="field-label">Теги вопроса</p>
-            <span class="field-prompt">Укажите от 1 до 5 тегов — предметных областей, к которым вопрос относится.</span>
+            <span class="field-prompt">Укажите через запятую от 1 до 5 тегов — предметных областей</span>
             <?= $form->field($model, 'tags')->input('text', ['class' => 'field', 'autocomplete' => 'off']) ?>
         </div>
 

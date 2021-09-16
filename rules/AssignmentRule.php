@@ -5,9 +5,9 @@ namespace app\rules;
 use yii\rbac\Rule;
 use app\models\User;
 
-class roleAssignmentRule extends Rule
+class AssignmentRule extends Rule
 {
-    public $name = 'roleAssignmentRule';
+    public $name = 'AssignmentRule';
 
     public function execute($user_id, $item, $params)
     {
