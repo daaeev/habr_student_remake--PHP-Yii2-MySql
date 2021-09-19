@@ -7,7 +7,7 @@ use app\models\AskForm;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use app\components\UrlGenHelper;
-use app\rules\AssignmentRule;
+use app\components\QuestionsGetHelper;
 
 class SiteController extends Controller
 {
@@ -27,12 +27,20 @@ class SiteController extends Controller
                     ],
                 ],
             ],
+            [
+                'class' => 'app\filters\SidebarQuestions',
+            ],
         ];
     }
     
-    public function actionIndex()
+    public function actionIndex($category = 'interesting')
     {
-        return $this->render('index');
+        $questions_data = QuestionsGetHelper::$category();
+
+        return $this->render('index', [
+            'questions' => $questions_data['questions'],
+            'pagination' => $questions_data['pagination'],
+        ]);
     }
 
     public function actionMy()

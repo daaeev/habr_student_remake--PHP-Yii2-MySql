@@ -1,6 +1,9 @@
 <?php
 
 use app\components\UrlGenHelper;
+use app\components\QuestionHtmlGen;
+use yii\bootstrap4\LinkPager;
+use yii\i18n\Formatter;
 
 ?>
 <content id="index">
@@ -13,55 +16,30 @@ use app\components\UrlGenHelper;
     </div>
 
     <div class="questions_block">
-        <div class="question">
-            <div class="info_block">
-                <a href="" class="tag"><img src="img/tag.jpg" alt="tag">windows</a><span class="tags_counter">+1</span>
-                <span class="сomplexity"><i class="bi bi-speedometer2 easy"></i>Простой</span>
+        
+        <?php foreach ($questions as $question): ?>
+            <div class="question">
+                <div class="info_block">
+                    <?= QuestionHtmlGen::tagLinkGen($question) ?>
+                    <span class="сomplexity"><?= QuestionHtmlGen::difficulty($question->difficulty) ?></span>
 
-                <p class="title"><a href="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, animi!</a></p>
+                    <p class="title"><a href=<?= UrlGenHelper::question($question->id) ?>><?= $question->title ?></a></p>
 
-                <div class="soc_info">
-                    <span class="subscribes">4 подписчика</span> |
-                    <span class="pub_date">43 минуты назад</span> |
-                    <span class="viewed">64 просмотра</span> 
+                    <div class="soc_info">
+                        <span class="subscribes"><?= QuestionHtmlGen::subscribes($question) ?></span> |
+                        <span class="pub_date"><?= (new Formatter)->asRelativeTime($question->pub_date) ?></span> |
+                        <span class="viewed"><?= QuestionHtmlGen::views($question) ?></span> 
+                    </div>
                 </div>
+
+                <a href=<?= UrlGenHelper::question($question->id) ?> class="answers"><?= QuestionHtmlGen::answers($question) ?></a>
             </div>
-
-            <a href="" class="answers"><span>2</span> ответа</a>
-        </div>
-
-        <div class="question">
-            <div class="info_block">
-                <a href="" class="tag"><img src="img/tag.jpg" alt="tag">windows</a><span class="tags_counter">+1</span>
-                <span class="сomplexity"><i class="bi bi-speedometer2 easy"></i>Простой</span>
-
-                <p class="title"><a href="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, animi!</a></p>
-
-                <div class="soc_info">
-                    <span class="subscribes">4 подписчика</span> |
-                    <span class="pub_date">43 минуты назад</span> |
-                    <span class="viewed">64 просмотра</span> 
-                </div>
-            </div>
-
-            <a href="" class="answers"><span>2</span> ответа</a>
-        </div>
-
-        <div class="question">
-            <div class="info_block">
-                <a href="" class="tag"><img src="img/tag.jpg" alt="tag">windows</a><span class="tags_counter">+1</span>
-                <span class="сomplexity"><i class="bi bi-speedometer2 easy"></i>Простой</span>
-
-                <p class="title"><a href="">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, animi!</a></p>
-
-                <div class="soc_info">
-                    <span class="subscribes">4 подписчика</span> |
-                    <span class="pub_date">43 минуты назад</span> |
-                    <span class="viewed">64 просмотра</span> 
-                </div>
-            </div>
-
-            <a href="" class="answers"><span>2</span> ответа</a>
-        </div>
+        <?php endforeach ?>
+        
+        <?=
+            LinkPager::widget([
+                'pagination' => $pagination,
+            ]); 
+        ?>
     </div>
 </content>

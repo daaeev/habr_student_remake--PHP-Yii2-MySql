@@ -2,6 +2,7 @@
 
 use app\components\UrlGenHelper;
 use yii\helpers\Html;
+use app\components\QuestionHtmlGen;
 
 $this->beginPage(); 
 ?>
@@ -63,13 +64,15 @@ $this->beginPage();
         <aside id="right">
             <p class="title">Самое интересное за 24 часа</p>
 
-            <div class="question">
-                <p class="title">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, vitae?</p>
-                <div class="soc_info">
-                    <span class="subscribes">4 подписчика</span> |
-                    <span class="answers">0 ответов</span> 
+            <?php foreach ($this->params['sidebar_questions'] as $question): ?>
+                <div class="question">
+                    <p class="title"><a href=<?= UrlGenHelper::question($question->id) ?>><?= $question->title ?></a></p>
+                    <div class="soc_info">
+                        <span class="subscribes"><?= QuestionHtmlGen::subscribes($question) ?></span> |
+                        <span class="answers"><?= QuestionHtmlGen::answers($question) ?></span> 
+                    </div>
                 </div>
-            </div>
+            <?php endforeach ?>
         </aside>
     </div>
 <?php $this->endBody() ?>

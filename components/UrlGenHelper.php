@@ -46,4 +46,9 @@ class UrlGenHelper
     {
         return '/admin/user';
     }
+
+    public static function question($id)
+    {
+        return '/q/' . $id;
+    }
 }
