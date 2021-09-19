@@ -7,7 +7,7 @@ use app\models\Tags;
 use app\models\QuestionToTagTags;
 use Yii;
 
-class TagImage extends Model
+class TagModel extends Model
 {
     public $image;
     public $tag_name;
@@ -23,7 +23,7 @@ class TagImage extends Model
     /*
        Splits the input tag string and generates a model for each tag
     */
-    public static function generateModels($tags)
+    public static function generateModels($tags, $question_id)
     {
         $tags_array = explode(',', str_replace(' ', '', $tags));
         $tags_models_array = [];
@@ -32,11 +32,18 @@ class TagImage extends Model
             /*
                Uniqueness check
             */
-            if (Tags::findOne(['tag_name' => ucfirst($tags_array[$i])])) {
+            if ($tag = Tags::findOne(['tag_name' => ucfirst($tags_array[$i])])) {
+                if (!QuestionToTagTags::find()->where(['tag_id' => $tag->id, 'question_id' => $question_id])->exists()) {
+                    $link = new QuestionToTagTags;
+                    $link->question_id = $question_id;
+                    $link->tag_id = $tag->id;
+
+                    $link->save();
+                }
                 continue;
             }
 
-            $tag_model = new TagImage();
+            $tag_model = new TagModel();
             $tag_model->tag_name = ucfirst($tags_array[$i]);
             $tags_models_array[] = $tag_model; 
         }
@@ -67,11 +74,11 @@ class TagImage extends Model
         $tag->tag_name = $this->tag_name;
         $tag->tag_image = $file_name;
 
-        $tag->save();
+        $tag->save(); 
     }
 
     /*
-       Create a contiguous entry between a question and a tag
+       Creates a linked entry between the question and the tag
     */
     private function addQtoTagLink($question_id)
     {

@@ -2,10 +2,10 @@
 
 namespace app\modules\admin\controllers;
 
+use Yii;
 use app\models\Question;
 use app\models\QuestionSearch;
-use app\models\TagImage;
-use Yii;
+use app\models\TagModel;
 use yii\base\Model;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -31,11 +31,14 @@ class QuestionController extends Controller
         ]);
     }
 
+    /*
+      $id -> question id; 
+    */
     public function actionCreateTags($id, $tags)
     {
-        $tags_models_array = TagImage::generateModels($tags);
+        $tags_models_array = TagModel::generateModels($tags, $id);
 
-        if (Yii::$app->request->post('TagImage')) {
+        if (Yii::$app->request->post('TagModel')) {
             /*
                If the form was submitted, then assign its own image to each model
             */
