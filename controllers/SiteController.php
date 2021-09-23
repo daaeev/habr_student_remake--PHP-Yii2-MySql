@@ -8,6 +8,8 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use app\components\UrlGenHelper;
 use app\components\QuestionsGetHelper;
+use app\components\QuestionHelper;
+use app\models\CommentsPosting;
 
 class SiteController extends Controller
 {
@@ -28,7 +30,7 @@ class SiteController extends Controller
                 ],
             ],
             [
-                'class' => 'app\filters\SidebarQuestions',
+                'class' => 'app\filters\NeededVariables',
             ],
         ];
     }
@@ -48,9 +50,15 @@ class SiteController extends Controller
         return $this->render('index');
     }
 
-    public function actionSingle()
+    public function actionSingle($id)
     {
-        return $this->render('single');
+        $question = QuestionsGetHelper::questionById($id);
+        $author = $question->author;
+        $comments = QuestionHelper::splitComments($question->comments);
+        $similar_questions = QuestionsGetHelper::questionByTag($question->id, $question->questionToTagTags[0]->tag_id);
+        $model = new CommentsPosting;
+
+        return $this->render('single', compact('question', 'author', 'comments', 'similar_questions', 'model'));
     }
 
     public function actionTags()
@@ -77,6 +85,14 @@ class SiteController extends Controller
     public function actionError()
     {
         $this->layout = 'error';
-        return $this->render('error');
+
+        $exception = Yii::$app->errorHandler->exception;
+        if (!$exception) {
+            return $this->redirect(UrlGenHelper::home());
+        }
+        
+        $message = $exception->getMessage();
+
+        return $this->render('error', compact('message'));
     }
 }

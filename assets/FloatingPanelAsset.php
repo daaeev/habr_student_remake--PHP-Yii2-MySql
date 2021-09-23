@@ -18,6 +18,7 @@ class FloatingPanelAsset extends AssetBundle
     public $js = [
         'public/js/FloatingPanel.js',
         'public/js/SettingsLinksCustomize.js',
+        'public/js/QuestionButtons.js',
     ];
     public $depends = [
         'app\assets\DependsAsset',

@@ -36,7 +36,7 @@ $this->beginPage();
                     <?php else: ?>
 
                         <div class="profile_link_block">
-                            <a href=<?= UrlGenHelper::simpleRoute('profile') ?> class="l_sidebar_link profile_link"><img src="/public/img/author.jpg" alt="author" class="author_img"><span><?= Html::encode(\Yii::$app->user->getIdentity()->name) ?></span></a>
+                            <a href=<?= UrlGenHelper::user($this->params['user']->id) ?> class="l_sidebar_link profile_link"><img src=<?= $this->params['user']->getImage() ?> alt="author" class="author_img"><span><?= Html::encode($this->params['user']->name) ?></span></a>
                             <a href=<?= UrlGenHelper::logout() ?> class="l_sidebar_link quit"><i class="bi bi-box-arrow-right"></i></a>
                         </div>
                         <a href=<?= UrlGenHelper::simpleRoute('my/') ?> class="l_sidebar_link"><i class="bi bi-card-list"></i><span>Моя лента</span></a>

@@ -16,7 +16,7 @@ class Question extends \yii\db\ActiveRecord
         return [
             [['content', 'tags'], 'string'],
             [['author_id', 'status', 'viewed'], 'integer'],
-            [['pub_date'], 'default', 'value' => date('d.m.Y')],
+            [['pub_date'], 'default', 'value' => time()],
             [['title'], 'string', 'max' => 255],
             [['author_id'], 'exist', 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
         ];
@@ -33,6 +33,7 @@ class Question extends \yii\db\ActiveRecord
             'viewed' => 'Viewed',
             'pub_date' => 'Pub Date',
             'difficulty' => 'Difficulty',
+            'ban_reason' => 'Ban Reason'
         ];
     }
 
