@@ -3,6 +3,10 @@
 namespace app\components;
 
 use app\components\UrlGenHelper;
+use app\components\QuestionHelper;
+use app\models\UserToCommentLike;
+use app\models\UserToQuestionSub;
+
 /*
    Helper class for generating html code for questions
 */
@@ -34,14 +38,14 @@ class QuestionHtmlGen
     {
         $count = count($question->userToQuestionSubs);
         
-        return $count . ' ' . self::numToWord($count, ['подписчик', 'подписчика', 'подписчиков']);
+        return $count . ' ' . QuestionHelper::numToWord($count, ['подписчик', 'подписчика', 'подписчиков']);
     }
 
     public static function views($question)
     {
         $count = $question->viewed;
 
-        return $count . ' ' . self::numToWord($count, ['просмотр', 'просмотра', 'просмотров']);
+        return $count . ' ' . QuestionHelper::numToWord($count, ['просмотр', 'просмотра', 'просмотров']);
     }
 
     public static function answers($question)
@@ -53,7 +57,7 @@ class QuestionHtmlGen
             }
         }
 
-        return '<span>' . $count . '</span> ' . self::numToWord($count, ['ответ', 'ответа', 'ответов']);
+        return '<span>' . $count . '</span> ' . QuestionHelper::numToWord($count, ['ответ', 'ответа', 'ответов']);
     }
 
     public static function difficulty($difficulty)
@@ -72,7 +76,7 @@ class QuestionHtmlGen
     {
         $count = count($comments);
         if ($count > 0) 
-            return '<span>' . $count . '</span>' . ' ' . self::numToWord($count, ['комментарий', 'комментария', 'комментариев']);
+            return '<span>' . $count . '</span>' . ' ' . QuestionHelper::numToWord($count, ['комментарий', 'комментария', 'комментариев']);
         
         return 'Комментировать';
     }
@@ -80,40 +84,39 @@ class QuestionHtmlGen
     public static function subscribesButton($question)
     {
         $count = count($question->userToQuestionSubs);
+        $class = 'subscribe-btn ' . $question->id;
+        $content = '';
+
         if ($count > 0) 
-            return 'Подписаться ' . '<span>' . $count . '</span>';
-        
-        return 'Подписаться';
+            $content =  'Подписаться ' . '<span>' . $count . '</span>';
+        else
+            $content = 'Подписаться';
+
+        if (QuestionHelper::existCheck(UserToQuestionSub::class, ['question_id' => $question->id])) 
+            $class .= ' cl';
+    
+        return self::generateButton($class, $content);
     }
 
     public static function likesButton($comment)
     {
         $count = count($comment->userToCommentLikes);
+        $class = 'like-btn ' . $comment->id;
+        $content = '';
+
         if ($count > 0) 
-            return 'Нравится ' . '<span>' . $count . '</span>';
+            $content = 'Нравится ' . '<span>' . $count . '</span>';
+        else
+            $content = 'Нравится';
+
+        if (QuestionHelper::existCheck(UserToCommentLike::class, ['comments_id' => $comment->id])) 
+            $class .= ' cl';
         
-        return 'Нравится';
+        return self::generateButton($class, $content);
     }
 
-    /*
-       Modifies a word based on a number
-    */
-    private static function numToWord($num, $words)
+    private static function generateButton($class, $content)
     {
-        $num = $num % 100;
-        if ($num > 19) {
-            $num = $num % 10;
-        }
-
-        switch ($num) {
-            case 1: 
-                return($words[0]);
-            
-            case 2: case 3: case 4: 
-                return($words[1]);
-            
-            default: 
-                return($words[2]);
-        }
+        return '<button type="button" class="' . $class . '">' . $content . '</button>';
     }
 }

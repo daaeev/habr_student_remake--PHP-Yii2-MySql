@@ -30,7 +30,7 @@ use yii\helpers\Html;
         </div>
 
         <div class="soc_buttons">
-            <button class="subscribe-btn"><?= QuestionHtmlGen::subscribesButton($question) ?></button>
+            <?= QuestionHtmlGen::subscribesButton($question) ?>
             <button class="comments-btn main_comments-btn"><?= QuestionHtmlGen::commentsButton($comments['mainComments']) ?></button>
         </div>
 
@@ -71,7 +71,7 @@ use yii\helpers\Html;
                                 </p>
                                 <p class="pub_date"><?= (new Formatter)->asRelativeTime($comment->pub_date) ?></p>
 
-                                <button type="button" class="like-btn"><?= QuestionHtmlGen::likesButton($comment) ?></button>
+                                <?= QuestionHtmlGen::likesButton($comment) ?>
                                 <button class="comments-btn"><?= QuestionHtmlGen::commentsButton($comments['answers']) ?></button>
 
                                 <div class="comments_block">

@@ -37,24 +37,42 @@ $('.comments-btn').on('click', function () {
 */
 $('.subscribe-btn').on('click', function () {
     if(authCheck()) {
-        if (!$(this).hasClass('cl')) {
-            if ($(this).children('span').length) {
-                $(this).children('span').text(Number($(this).children('span').text()) + 1);
-            } else {
-                $(this).html($(this).text() + ' <span>1</span>');
-            }
+        let ques_id = ($(this).prop('classList'))[1];
+        let button = $('.subscribe-btn');
+        $.ajax({
+            url: '/ajax-handler/sub',
+            method: 'get',
+            dataType: 'html',
+            data: {question_id: ques_id},
+            beforeSend: function () {
+                button.attr('disabled', true);
+            },
+            success: function () {
+                setTimeout(() => button.attr('disabled', false), 1000);
 
-            $(this).addClass('cl');
-        } else {
-            if (Number($(this).children('span').text()) == 1) {
-                $(this).text('Подписаться');
-            } else {
-                $(this).html(Number($(this).children('span').text()) - 1);
+                if (!button.hasClass('cl')) {
+                    if (button.children('span').length) {
+                        button.children('span').text(Number(button.children('span').text()) + 1);
+                    } else {
+                        button.html(button.text() + ' <span>1</span>');
+                    }
+        
+                    button.addClass('cl');
+                } else {
+                    if (Number(button.children('span').text()) == 1) {
+                        button.text('Подписаться');
+                    } else {
+                        button.html('Подписаться ' + '<span>' +  (Number(button.children('span').text()) - 1) + '</span>');
+                    }
+        
+                    button.removeClass('cl');
+                }
+            },
+            error: function() {
+                alert('Oops, something is wrong!');
+                setTimeout(() => button.attr('disabled', false), 1000);
             }
-
-            $(this).removeClass('cl');
-        }
-        // AJAX
+        });
     }
 })
 
@@ -63,24 +81,42 @@ $('.subscribe-btn').on('click', function () {
 */
 $('.like-btn').on('click', function () {
     if(authCheck()) {
-        if (!$(this).hasClass('cl')) {
-            if ($(this).children('span').length) {
-                $(this).children('span').text(Number($(this).children('span').text()) + 1);
-            } else {
-                $(this).html($(this).text() + ' <span>1</span>');
-            }
+        let comm_id = ($(this).prop("classList"))[1];
+        let button = $('.subscribe-btn'); // WARNING!!!!
+        $.ajax({
+            url: '/ajax-handler/like',
+            method: 'get',
+            dataType: 'html',
+            data: {comment_id: comm_id},
+            beforeSend: function() {
+                button.attr('disabled', true);
+            },
+            success: function () {
+                setTimeout(() => button.attr('disabled', false), 1000);
 
-            $(this).addClass('cl');
-        } else {
-            if (Number($(this).children('span').text()) == 1) {
-                $(this).text('Подписаться');
-            } else {
-                $(this).html(Number($(this).children('span').text()) - 1);
+                if (!button.hasClass('cl')) {
+                    if (button.children('span').length) {
+                        button.children('span').text(Number(button.children('span').text()) + 1);
+                    } else {
+                        button.html(button.text() + ' <span>1</span>');
+                    }
+        
+                    button.addClass('cl');
+                } else {
+                    if (Number(button.children('span').text()) == 1) {
+                        button.text('Подписаться');
+                    } else {
+                        button.html('Нравится ' + '<span>' +  (Number(button.children('span').text()) - 1) + '</span>');
+                    }
+        
+                    button.removeClass('cl');
+                }
+            },
+            error: function () {
+                alert('Oops, something is wrong!');
+                location.reload();
             }
-
-            $(this).removeClass('cl');
-        }
-        // AJAX
+        });
     }
 })
 
