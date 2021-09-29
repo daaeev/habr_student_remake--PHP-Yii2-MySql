@@ -40,7 +40,7 @@ $('.subscribe-btn').on('click', function () {
         let ques_id = ($(this).prop('classList'))[1];
         let button = $('.subscribe-btn');
         $.ajax({
-            url: '/ajax-handler/sub',
+            url: '/handler/sub',
             method: 'get',
             dataType: 'html',
             data: {question_id: ques_id},
@@ -84,7 +84,7 @@ $('.like-btn').on('click', function () {
         let comm_id = ($(this).prop("classList"))[1];
         let button = $('.subscribe-btn'); // WARNING!!!!
         $.ajax({
-            url: '/ajax-handler/like',
+            url: '/handler/like',
             method: 'get',
             dataType: 'html',
             data: {comment_id: comm_id},
@@ -119,7 +119,3 @@ $('.like-btn').on('click', function () {
         });
     }
 })
-
-/*
-   Submit comment button
-*/

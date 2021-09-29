@@ -1,5 +1,6 @@
 <?php
 
+use app\components\QuestionHelper;
 use app\components\UrlGenHelper;
 use app\components\QuestionHtmlGen;
 use yii\i18n\Formatter;
@@ -51,31 +52,32 @@ use yii\helpers\Html;
                 </div>
             <?php endforeach ?>
             
-            <?= $this->renderFile('@app/views/partials/comment_form.php', compact('model')) ?>
+            <?= $this->renderFile('@app/views/partials/comment_form.php', ['model' => $model, 'question_id' => $question->id, 'type' => 1]) ?>
 
         </div>
 
         <div class="answers_container">
             <?php if (count($comments['answers']) > 0): ?>
+            <?php QuestionHelper::getChildrenComments($comments['answers'], $comments['commentsToAnswers']) ?>
                 <p class="header-under_text">Ответы на вопрос (<?= count($comments['answers']) ?>)</p>
 
                 <div class="answers_block">
-                    <?php foreach ($comments['answers'] as $comment): ?>
+                    <?php foreach ($comments['answers'] as $Comment): ?>
                         <div class="answer">
-                            <a href=<?= UrlGenHelper::user($comment->author->id) ?> class="author_img"><img src=<?= $comment->author->getImage() ?>></a>
+                            <a href=<?= UrlGenHelper::user($Comment->author->id) ?> class="author_img"><img src=<?= $Comment->author->getImage() ?>></a>
 
                             <div class="text_block">
-                                <a class="author_name" href=<?= UrlGenHelper::user($comment->author->id) ?>><?= Html::encode($comment->author->name) ?></a>
+                                <a class="author_name" href=<?= UrlGenHelper::user($Comment->author->id) ?>><?= Html::encode($Comment->author->name) ?></a>
                                 <p class="answer_content">
-                                    <?= Html::encode($comment->content) ?>
+                                    <?= Html::encode($Comment->content) ?>
                                 </p>
-                                <p class="pub_date"><?= (new Formatter)->asRelativeTime($comment->pub_date) ?></p>
+                                <p class="pub_date">Написано <?= (new Formatter)->asRelativeTime($Comment->pub_date) ?></p>
 
-                                <?= QuestionHtmlGen::likesButton($comment) ?>
-                                <button class="comments-btn"><?= QuestionHtmlGen::commentsButton($comments['answers']) ?></button>
+                                <?= QuestionHtmlGen::likesButton($Comment) ?>
+                                <button class="comments-btn"><?= QuestionHtmlGen::commentsButton($Comment->childComments) ?></button>
 
                                 <div class="comments_block">
-                                    <?php foreach ($comments['answers'] as $comment): ?>
+                                    <?php foreach ($Comment->childComments as $comment): ?>
                                         <div class="comment">
                                             <a href=<?= UrlGenHelper::user($comment->author->id) ?> class="author_img"><img src=<?= $comment->author->getImage() ?>></a>
                     
@@ -91,7 +93,12 @@ use yii\helpers\Html;
                                         </div>
                                     <?php endforeach ?>
 
-                                    <?= $this->renderFile('@app/views/partials/comment_form.php', compact('model')) ?>
+                                    <?= $this->renderFile('@app/views/partials/comment_form.php', [
+                                            'model' => $model, 
+                                            'question_id' => $question->id,
+                                            'parent_id' => $Comment->id,
+                                        ]) 
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +109,7 @@ use yii\helpers\Html;
             <p class="header-under_text">Ваш ответ на вопрос</p>
         </div>
 
-        <?= $this->renderFile('@app/views/partials/answer_form.php', compact('model')) ?>
+        <?= $this->renderFile('@app/views/partials/answer_form.php', ['model' => $model, 'question_id' => $question->id]) ?>
 
         <p class="header-under_text simillar">Похожие вопросы</p>
     </div>

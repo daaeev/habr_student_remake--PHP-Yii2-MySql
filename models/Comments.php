@@ -6,6 +6,8 @@ use Yii;
 
 class Comments extends \yii\db\ActiveRecord
 {
+    public $childComments = [];
+
     public static function tableName()
     {
         return 'comments';
@@ -16,7 +18,7 @@ class Comments extends \yii\db\ActiveRecord
         return [
             [['content'], 'string'],
             [['author_id', 'question_id', 'comment_kind', 'parent_comment_id'], 'integer'],
-            [['pub_date'], 'safe'],
+            [['pub_date'], 'default', 'value' => time()],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::class, 'targetAttribute' => ['question_id' => 'id']],
         ];

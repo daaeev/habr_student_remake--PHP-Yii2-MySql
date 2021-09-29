@@ -2,6 +2,7 @@
 
 namespace app\components;
 
+use app\models\Comments;
 use Yii;
 
 /*
@@ -58,7 +59,7 @@ class QuestionHelper
     }
 
     /*
-       Checking for the existence of a record in a linked table
+       Checking for the existence of a record in a linked table (UserToCommentLike, UserToQuestionSub) only
     */
     public static function existCheck($linkName, $data)
     {
@@ -68,5 +69,54 @@ class QuestionHelper
                 'user_id' => Yii::$app->user->getId()
             ])
             ->exists();
+    }
+
+    /*
+       Checking the authenticity of data from the comment form
+    */
+    public static function validateGetData($referef_url, $getData)
+    {
+        extract($getData, EXTR_OVERWRITE); // $question_id, $parent_id = null -> form data
+        $refererExplodeArray = explode('/', $referef_url);
+
+        // id of the question to which the comment is written
+        $refererQuestionId = $refererExplodeArray[array_key_last($refererExplodeArray)];
+
+        if ($refererQuestionId == $question_id) {
+            if (isset($type) && $type != 1)
+                return false;
+
+            if (isset($parent_id)) {
+                $commentExist = Comments::find()->where(['id' => $parent_id])->exists();
+
+                if ($commentExist) 
+                    return true;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function getKindOfComment($parent, $type) : int
+    {
+        if (isset($parent))
+            return 3;
+        if (isset($type))
+            return 1;
+        else
+            return 2;
+    }
+
+    public static function getChildrenComments($answers, $childComments)
+    {
+        foreach ($answers as $answer) {
+            foreach ($childComments as $comment) {
+                if ($comment->parent_comment_id == $answer->id) {
+                    $answer->childComments[] = $comment;
+                }
+            }
+        }
     }
 }

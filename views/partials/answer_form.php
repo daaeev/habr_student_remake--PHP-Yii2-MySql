@@ -17,8 +17,11 @@ if (!\Yii::$app->user->isGuest):
                     <button type="button">B</button>
                 </div>
 
-                <?php $form = ActiveForm::begin() ?>
-                    <?= $form->field($model, 'content')->textarea()->label() ?>
+                <?php $form = ActiveForm::begin([
+                    'action' => '/handler/comment?' . 'question_id=' . $question_id,
+                    'method' => 'POST',
+                ]) ?>
+                    <?= $form->field($model, 'content')->textarea()->label('') ?>
                     <button type="submit">Опубликовать</button>
                 <?php ActiveForm::end() ?>
             </div>

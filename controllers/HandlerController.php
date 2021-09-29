@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\components\QuestionHelper;
+use app\models\CommentsPosting;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
@@ -10,7 +12,7 @@ use app\models\UserToQuestionSub;
 /*
    Class for handling ajax requests
 */
-class AjaxHandlerController extends Controller
+class HandlerController extends Controller
 {
     public function actionLike($comment_id)
     {
@@ -32,14 +34,31 @@ class AjaxHandlerController extends Controller
                 return true;
             } else {
                 $model = new UserToQuestionSub;
-                $model->user_id = Yii::$app->user->getId();
-                $model->question_id = $question_id;
-                $model->save();
 
-                return true;
+                return $model->createRelation($question_id);
             }
         }
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
+
+    public function actionComment($question_id, $parent_id = null, $type = null)
+    {
+        if (Yii::$app->request->isPost) {
+            if (QuestionHelper::validateGetData($_SERVER['HTTP_REFERER'], [
+                    'question_id' => $question_id,
+                    'parent_id' => $parent_id,
+                    'type' => $type,
+                ])
+            ) {
+                $model = new CommentsPosting;
+                
+                if ($model->load(Yii::$app->request->post(), 'CommentsPosting')) {
+                    $model->createComment($question_id, $parent_id, $type);
+                }
+            }
+        }
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }
