@@ -38,6 +38,14 @@ class UserToQuestionSub extends \yii\db\ActiveRecord
         ];
     }
 
+    public function createRelation($question_id)
+    {
+        $this->user_id = Yii::$app->user->getId();
+        $this->question_id = $question_id;
+        
+        $this->save();
+    }
+
     /**
      * Gets query for [[Question]].
      *

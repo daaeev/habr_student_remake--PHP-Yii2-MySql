@@ -8,6 +8,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 use app\models\UserToQuestionSub;
+use app\models\UserToCommentLike;
 
 /*
    Class for handling ajax requests
@@ -17,10 +18,18 @@ class HandlerController extends Controller
     public function actionLike($comment_id)
     {
         if (Yii::$app->request->isAjax) {
-            // TODO...
-        } else {
-            throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+            $model = UserToCommentLike::find()->where(['user_id' => Yii::$app->user->getId(), 'comment_id' => $comment_id])->one();
+
+            if ($model) {
+                return $model->delete();
+            } else {
+                $model = new UserToCommentLike;
+
+                return $model->createRelation($comment_id);
+            }
         }
+        
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
     }
 
     public function actionSub($question_id)
@@ -29,9 +38,7 @@ class HandlerController extends Controller
             $model = UserToQuestionSub::find()->where(['user_id' => Yii::$app->user->getId(), 'question_id' => $question_id])->one();
 
             if ($model) {
-                $model->delete();
-                
-                return true;
+                return $model->delete();
             } else {
                 $model = new UserToQuestionSub;
 

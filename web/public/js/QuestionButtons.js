@@ -82,7 +82,7 @@ $('.subscribe-btn').on('click', function () {
 $('.like-btn').on('click', function () {
     if(authCheck()) {
         let comm_id = ($(this).prop("classList"))[1];
-        let button = $('.subscribe-btn'); // WARNING!!!!
+        let button = $($(this).parent()).children('.like-btn');
         $.ajax({
             url: '/handler/like',
             method: 'get',
@@ -104,7 +104,7 @@ $('.like-btn').on('click', function () {
                     button.addClass('cl');
                 } else {
                     if (Number(button.children('span').text()) == 1) {
-                        button.text('Подписаться');
+                        button.text('Нравится');
                     } else {
                         button.html('Нравится ' + '<span>' +  (Number(button.children('span').text()) - 1) + '</span>');
                     }

@@ -35,6 +35,14 @@ class UserToCommentLike extends \yii\db\ActiveRecord
         ];
     }
 
+    public function createRelation($comment_id)
+    {
+        $this->user_id = Yii::$app->user->getId();
+        $this->comment_id = $comment_id;
+        
+        $this->save();
+    }
+
     /**
      * Gets query for [[Comment]].
      *
