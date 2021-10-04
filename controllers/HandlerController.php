@@ -3,22 +3,33 @@
 namespace app\controllers;
 
 use app\components\QuestionHelper;
-use app\models\CommentsPosting;
+use app\models\Comments;
+use app\components\QuestionHtmlGen;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 use app\models\UserToQuestionSub;
 use app\models\UserToCommentLike;
+use yii\base\InvalidValueException;
 
 /*
    Class for handling ajax requests
 */
 class HandlerController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => 'app\filters\NeededForAllVariables',
+            ],
+        ];
+    }
+
     public function actionLike($comment_id)
     {
         if (Yii::$app->request->isAjax) {
-            $model = UserToCommentLike::find()->where(['user_id' => Yii::$app->user->getId(), 'comment_id' => $comment_id])->one();
+            $model = UserToCommentLike::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'comment_id' => $comment_id])->one();
 
             if ($model) {
                 return $model->delete();
@@ -35,7 +46,7 @@ class HandlerController extends Controller
     public function actionSub($question_id)
     {
         if (Yii::$app->request->isAjax) {
-            $model = UserToQuestionSub::find()->where(['user_id' => Yii::$app->user->getId(), 'question_id' => $question_id])->one();
+            $model = UserToQuestionSub::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'question_id' => $question_id])->one();
 
             if ($model) {
                 return $model->delete();
@@ -49,23 +60,34 @@ class HandlerController extends Controller
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
     }
 
-    public function actionComment($question_id, $parent_id = null, $type = null)
+    public function actionDeleteComment($comment_id)
     {
-        if (Yii::$app->request->isPost) {
-            if (QuestionHelper::validateGetData($_SERVER['HTTP_REFERER'], [
-                    'question_id' => $question_id,
-                    'parent_id' => $parent_id,
-                    'type' => $type,
-                ])
-            ) {
-                $model = new CommentsPosting;
-                
-                if ($model->load(Yii::$app->request->post(), 'CommentsPosting')) {
-                    $model->createComment($question_id, $parent_id, $type);
-                }
-            }
+        if (Yii::$app->request->isAjax) {
+            $model = Comments::findOne($comment_id);
+            if ($model->isAuthor(Yii::$app->view->params['user'])) {
+                return $model->delete();
+            } else 
+                throw new InvalidValueException('На обработку получены некорректные данные');
         }
 
-        return $this->redirect($_SERVER['HTTP_REFERER']);
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
+
+    public function actionCommentEdit($content, $comment_id, $old_content)
+    {
+        if (Yii::$app->request->isAjax) {
+            if ($comment = QuestionHelper::validateGetData([
+                    'comment_id' => $comment_id,
+                    'old_content' => $old_content,
+                ], 'edit')
+            ) {
+                $comment->content = QuestionHtmlGen::contentProcessing($content);
+
+                return $comment->save(false);
+            } else 
+                throw new InvalidValueException('На обработку получены некорректные данные');
+        }
+
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
     }
 }

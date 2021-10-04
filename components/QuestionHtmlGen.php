@@ -6,6 +6,7 @@ use app\components\UrlGenHelper;
 use app\components\QuestionHelper;
 use app\models\UserToCommentLike;
 use app\models\UserToQuestionSub;
+use yii\helpers\Html;
 
 /*
    Helper class for generating html code for questions
@@ -52,7 +53,7 @@ class QuestionHtmlGen
     {
         $count = 0;
         foreach ($question->comments as $comment) {
-            if ($comment->comment_kind == 1) {
+            if ($comment->comment_kind == 2) {
                 $count++;
             }
         }
@@ -72,51 +73,93 @@ class QuestionHtmlGen
         }
     }
 
-    public static function commentsButton($comments)
+    public static function commentsButton($comments, $class)
     {
         $count = count($comments);
         if ($count > 0) 
-            return '<span>' . $count . '</span>' . ' ' . QuestionHelper::numToWord($count, ['комментарий', 'комментария', 'комментариев']);
-        
-        return 'Комментировать';
+            $title = '<span>' . $count . '</span>' . ' ' . QuestionHelper::numToWord($count, ['комментарий', 'комментария', 'комментариев']);
+        else
+            $title = 'Комментировать';
+
+        return self::generateButton($class, $title);
     }
     
     public static function subscribesButton($question)
     {
         $count = count($question->userToQuestionSubs);
         $class = 'subscribe-btn ' . $question->id;
-        $content = '';
+        $title = '';
 
         if ($count > 0) 
-            $content =  'Подписаться ' . '<span>' . $count . '</span>';
+            $title =  'Подписаться ' . '<span>' . $count . '</span>';
         else
-            $content = 'Подписаться';
+            $title = 'Подписаться';
 
         if (QuestionHelper::existCheck(UserToQuestionSub::class, ['question_id' => $question->id])) 
             $class .= ' cl';
     
-        return self::generateButton($class, $content);
+        return self::generateButton($class, $title);
     }
 
     public static function likesButton($comment)
     {
         $count = count($comment->userToCommentLikes);
-        $class = 'like-btn ' . $comment->id;
-        $content = '';
+        $class = 'like-btn';
+        $title = '';
 
         if ($count > 0) 
-            $content = 'Нравится ' . '<span>' . $count . '</span>';
+            $title = 'Нравится ' . '<span>' . $count . '</span>';
         else
-            $content = 'Нравится';
+            $title = 'Нравится';
 
-        if (QuestionHelper::existCheck(UserToCommentLike::class, ['comments_id' => $comment->id])) 
+        if (QuestionHelper::existCheck(UserToCommentLike::class, ['comment_id' => $comment->id])) 
             $class .= ' cl';
         
-        return self::generateButton($class, $content);
+        return self::generateButton($class, $title);
     }
 
-    private static function generateButton($class, $content)
+    public static function generateQuestionControlButtons($comment, $user)
     {
-        return '<button type="button" class="' . $class . '">' . $content . '</button>';
+        if ($comment->isAuthor($user)) {
+            $buttons = [
+                'edit' => self::generateButton('control-btn edit-btn', '<i class="bi bi-pencil-fill"></i>'),
+                'delete' => self::generateButton('control-btn delete-btn', '<i class="bi bi-trash-fill"></i>'),
+            ];
+        } else {
+            $buttons = [
+                'complain' => self::generateButton('control-btn complain-btn', '<i class="bi bi-shield-fill-exclamation"></i>'),
+            ];
+        }
+
+        foreach ($buttons as $button) {
+            echo $button;
+        }
+    }
+
+    public static function generateFormHelpButtons()
+    {
+        $buttons = [
+            'some1' => self::generateButton('', 'B'),
+            'some2' => self::generateButton('', 'B'),
+            'some3' => self::generateButton('', 'B'),
+        ];
+
+
+        foreach ($buttons as $button) {
+            echo $button;
+        }
+    }
+
+    private static function generateButton($class, $title)
+    {
+        return '<button type="button" class="' . $class . '">' . $title . '</button>';
+    }
+
+    public static function contentProcessing($text)
+    {
+        // TODO...
+
+        $content = $text;
+        return Html::encode($content);
     }
 }

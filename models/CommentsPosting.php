@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\components\QuestionHelper;
+use app\components\QuestionHtmlGen;
 use Yii;
 use yii\base\Model;
 
@@ -27,7 +28,7 @@ class CommentsPosting extends Model
     public function createComment($question_id, $parent_id, $type)
     {
         $model = new Comments;
-        $model->content = $this->content;
+        $model->content = QuestionHtmlGen::contentProcessing($this->content);
         $model->author_id = Yii::$app->user->getId();
         $model->question_id = $question_id;
         $model->comment_kind = QuestionHelper::getKindOfComment($parent_id, $type);

@@ -4,6 +4,7 @@ namespace app\models;
 
 use yii\base\Model;
 use app\models\Question;
+use app\components\QuestionHtmlGen;
 
 class AskForm extends Model 
 {
@@ -35,7 +36,7 @@ class AskForm extends Model
     {
         $question = new Question;
         $question->title = $this->essence;
-        $question->content = $this->content;
+        $question->content = QuestionHtmlGen::contentProcessing($this->content);
         $question->tags = $this->tags;
         $question->author_id = \Yii::$app->user->getId();
         $question->difficulty = $this->difficulty;
@@ -47,10 +48,10 @@ class AskForm extends Model
     public function attributeLabels()
     {
         return [
-            'essence' => '',
-            'tags' => '',
-            'difficulty' => '',
-            'content' => '',
+            'essence' => 'Суть вопроса',
+            'tags' => 'Теги',
+            'difficulty' => 'Сложность',
+            'content' => 'Детали вопроса',
         ];
     }
 }

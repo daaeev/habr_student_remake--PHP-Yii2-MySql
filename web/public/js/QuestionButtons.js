@@ -1,5 +1,10 @@
+$(document).ready(function () {
+    if ($('.user_have_answer').length) 
+        $('.answer_form_block').css('display', 'none');
+});
+
 function authCheck() {
-    if (!$('.answer_form_block').length) {
+    if (!$('.answer_form_block').length && !$('.user_have_answer').length) {
         window.location.href = '/login';
         return false;
     }
@@ -7,11 +12,22 @@ function authCheck() {
     return true;
 }
 
+function error() {
+    alert('Oops, something is wrong!');
+    location.reload();
+}
+
 /*
    Button for viewing comments
 */
 $('.comments-btn').on('click', function () {
-    if(authCheck()) { 
+    let mainCommentsCount = $(this).parent('.soc_buttons').siblings('.comments_block').children('.comment').length;
+    let commentsToAnswerCount = $(this).siblings('.comments_block').children('.comment').length;
+    if (
+        authCheck() && (mainCommentsCount || commentsToAnswerCount)
+        || (($(this).hasClass('main_comments-btn') && mainCommentsCount)
+        || ($(this).hasClass('comments-btn') && commentsToAnswerCount))
+    ) {
         if (!$(this).hasClass('view')) {
             if ($(this).hasClass('main_comments-btn')) {
                 $('.main_comments').css('display', 'block');
@@ -68,10 +84,7 @@ $('.subscribe-btn').on('click', function () {
                     button.removeClass('cl');
                 }
             },
-            error: function() {
-                alert('Oops, something is wrong!');
-                setTimeout(() => button.attr('disabled', false), 1000);
-            }
+            error: error,
         });
     }
 })
@@ -81,8 +94,8 @@ $('.subscribe-btn').on('click', function () {
 */
 $('.like-btn').on('click', function () {
     if(authCheck()) {
-        let comm_id = ($(this).prop("classList"))[1];
-        let button = $($(this).parent()).children('.like-btn');
+        let comm_id = $(this).siblings('.comm_id').val();
+        let button = $(this);
         $.ajax({
             url: '/handler/like',
             method: 'get',
@@ -112,10 +125,90 @@ $('.like-btn').on('click', function () {
                     button.removeClass('cl');
                 }
             },
-            error: function () {
-                alert('Oops, something is wrong!');
-                location.reload();
-            }
+            error: error,
         });
+    }
+})
+
+/*
+   Delete button
+*/
+$('.delete-btn').on('click', function () {
+    if (confirm('Are you sure?')) {
+        let comm_id = $(this).siblings('.comment_id').val();
+        let comment_block = $(this).parent('.text_block').parent('.answer');
+        let button = $(this);
+        if (!isNaN(comm_id)) {
+            $.ajax({
+                url: '/handler/delete-comment',
+                method: 'get',
+                dataType: 'html',
+                data: {comment_id: comm_id},
+                success: function () {
+                    let answersCount = (Number($('.answers_container .answers-count span').text()) - 1);
+                    if (answersCount == 0) {
+                        $('.answers_container .answers-count').css('display', 'none');
+                        $('.answers_block').css('display', 'none');
+                    }
+                    else {
+                        comment_block.css('display', 'none');
+                        $('.answers_container .answers-count span').text(answersCount);
+                    }
+                    
+                    $('.user_have_answer').css('display', 'none');
+                    $('.answer_form_block').css('display', 'flex');
+                },
+                error: error,
+            });
+        } else {
+            error();
+        }
+    }
+})
+
+/*
+   Edit button
+*/
+$('.edit-btn').on('click', function () {
+    if (!$(this).hasClass('editing')) {
+        let content = $(this).siblings('.answer_content').children('span').text();
+        $(this).siblings('.answer_content').children('span').css('display', 'none');
+        $(this).siblings('.comment_form_block').css('display', 'block');
+        $(this).siblings('.comment_form_block').children('.form_block').children('.single_form').children('form').children('textarea').val(content); // шаблонизатор
+
+        $(this).addClass('editing');
+    } else {
+        $(this).siblings('.comment_form_block').css('display', 'none');
+        $(this).siblings('.answer_content').children('span').css('display', 'block');
+
+        $(this).removeClass('editing');
+    }
+})
+
+/*
+   Editing form submit button
+*/
+$('#edit-form').submit(function (e) {
+    e.preventDefault();
+    let old_content = $(this).parent('.single_form').parent('.form_block').parent('.comment_form_block').siblings('.answer_content').children('span').html();
+    let comment_id = $(this).parent('.single_form').parent('.form_block').parent('.comment_form_block').siblings('.comment_id').val();
+    let edited_content = $(this).children('textarea').val();
+    let form_element = $(this);
+    if (!isNaN(comment_id)) {
+        $.ajax({
+            url: '/handler/comment-edit',
+            method: 'get',
+            dataType: 'html',
+            data: {comment_id: comment_id, content: edited_content, old_content: old_content},
+            success: function () {
+                form_element.parent('.single_form').parent('.form_block').parent('.comment_form_block').css('display', 'none');
+                form_element.parent('.single_form').parent('.form_block').parent('.comment_form_block').siblings('.answer_content').children('span').text(edited_content); // шаблонизатор
+                form_element.parent('.single_form').parent('.form_block').parent('.comment_form_block').siblings('.answer_content').children('span').css('display', 'block');
+                form_element.parent('.single_form').parent('.form_block').parent('.comment_form_block').siblings('.edit-btn').removeClass('editing');
+            },
+            error: error,
+        });
+    } else {
+        error();
     }
 })

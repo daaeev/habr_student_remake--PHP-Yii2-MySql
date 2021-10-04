@@ -37,6 +37,12 @@ class Comments extends \yii\db\ActiveRecord
         ];
     }
 
+    public function isAuthor($user)
+    {
+        if ($this->author->id == @$user->id)
+            return true;
+    }
+
     public function getAuthor()
     {
         return $this->hasOne(User::class, ['id' => 'author_id']);

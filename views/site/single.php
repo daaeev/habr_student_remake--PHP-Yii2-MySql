@@ -23,7 +23,7 @@ use yii\helpers\Html;
         </div>
 
         <p class="title"><?= Html::encode($question->title) ?></p>
-        <p class="text"><?= Html::encode($question->content) ?></p>
+        <p class="text"><?= $question->content ?></p>
         
         <div class="soc_info">
             <span>Вопрос задан <?= (new Formatter)->asRelativeTime($question->pub_date) ?></span>
@@ -32,7 +32,7 @@ use yii\helpers\Html;
 
         <div class="soc_buttons">
             <?= QuestionHtmlGen::subscribesButton($question) ?>
-            <button class="comments-btn main_comments-btn"><?= QuestionHtmlGen::commentsButton($comments['mainComments']) ?></button>
+            <?= QuestionHtmlGen::commentsButton($comments['mainComments'], 'comments-btn main_comments-btn') ?>
         </div>
 
         <div class="comments_block main_comments">
@@ -43,7 +43,7 @@ use yii\helpers\Html;
                     <div class="text_block">
                         <a class="author_name" href=""><?= Html::encode($comment->author->name) ?></a>
                         <p class="comment_content">
-                            <?= Html::encode($comment->content) ?>
+                            <?= $comment->content ?>
                         </p>
                         <p class="pub_date">Написано <?= (new Formatter)->asRelativeTime($comment->pub_date) ?></p>
 
@@ -59,22 +59,29 @@ use yii\helpers\Html;
         <div class="answers_container">
             <?php if (count($comments['answers']) > 0): ?>
             <?php QuestionHelper::getChildrenComments($comments['answers'], $comments['commentsToAnswers']) ?>
-                <p class="header-under_text">Ответы на вопрос (<?= count($comments['answers']) ?>)</p>
+                <p class="header-under_text answers-count">Ответы на вопрос (<span><?= count($comments['answers']) ?></span>)</p>
 
                 <div class="answers_block">
                     <?php foreach ($comments['answers'] as $Comment): ?>
                         <div class="answer">
                             <a href=<?= UrlGenHelper::user($Comment->author->id) ?> class="author_img"><img src=<?= $Comment->author->getImage() ?>></a>
-
+                                
                             <div class="text_block">
                                 <a class="author_name" href=<?= UrlGenHelper::user($Comment->author->id) ?>><?= Html::encode($Comment->author->name) ?></a>
                                 <p class="answer_content">
-                                    <?= Html::encode($Comment->content) ?>
+                                    <span><?= $Comment->content ?></span>
+                                    <?= $this->renderFile('@app/views/partials/edit_form.php', [
+                                            'model' => $model, 
+                                            'old_content' => $Comment->content,
+                                            'comment_id' => $Comment->id,
+                                        ]) 
+                                    ?>
                                 </p>
                                 <p class="pub_date">Написано <?= (new Formatter)->asRelativeTime($Comment->pub_date) ?></p>
-
+                                <input type="hidden" value="<?= $Comment->id ?>" class="comment_id">
                                 <?= QuestionHtmlGen::likesButton($Comment) ?>
-                                <button class="comments-btn"><?= QuestionHtmlGen::commentsButton($Comment->childComments) ?></button>
+                                <?= QuestionHtmlGen::commentsButton($Comment->childComments, 'comments-btn') ?>
+                                <?= QuestionHtmlGen::generateQuestionControlButtons($Comment, Yii::$app->view->params['user']) ?>
 
                                 <div class="comments_block">
                                     <?php foreach ($Comment->childComments as $comment): ?>
@@ -84,7 +91,7 @@ use yii\helpers\Html;
                                             <div class="text_block">
                                                 <a class="author_name" href=<?= UrlGenHelper::user($comment->author->id) ?>><?= Html::encode($comment->author->name) ?></a>
                                                 <p class="comment_content">
-                                                    <?= Html::encode($comment->content) ?>
+                                                    <?= $comment->content ?>
                                                 </p>
                                                 <p class="pub_date">Написано <?= (new Formatter)->asRelativeTime($comment->pub_date) ?></p>
                     
@@ -108,8 +115,15 @@ use yii\helpers\Html;
 
             <p class="header-under_text">Ваш ответ на вопрос</p>
         </div>
-
-        <?= $this->renderFile('@app/views/partials/answer_form.php', ['model' => $model, 'question_id' => $question->id]) ?>
+        
+    <?= $this->renderFile('@app/views/partials/answer_form.php', ['model' => $model, 'question_id' => $question->id]) ?>
+    <?php if (QuestionHelper::checkUserHaveAnswer(Yii::$app->view->params['user'], $comments['answers'])): ?>
+        <div class="user_have_answer">
+            <img src="/public/img/have_answer.png" alt="have answer image">
+            <p class="bold">Вы уже отвечали на вопрос</p>
+            <p>Если хотите что-то добавить, то можете отредактировать свой ответ.</p>
+        </div>
+    <?php endif ?>
 
         <p class="header-under_text simillar">Похожие вопросы</p>
     </div>

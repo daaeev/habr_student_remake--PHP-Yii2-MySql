@@ -4,6 +4,7 @@ namespace app\components;
 
 use app\models\Comments;
 use Yii;
+use yii\helpers\Html;
 
 /*
    Helper class for data processing
@@ -74,26 +75,40 @@ class QuestionHelper
     /*
        Checking the authenticity of data from the comment form
     */
-    public static function validateGetData($referef_url, $getData)
-    {
-        extract($getData, EXTR_OVERWRITE); // $question_id, $parent_id = null -> form data
-        $refererExplodeArray = explode('/', $referef_url);
+    public static function validateGetData($getData, $type)
+    {   
+        if ($type == 'create') {
+            extract($getData, EXTR_OVERWRITE); // $question_id, $parent_id = null, $referef_url -- get-parametrs data
+            $refererExplodeArray = explode('/', $referer_url);
 
-        // id of the question to which the comment is written
-        $refererQuestionId = $refererExplodeArray[array_key_last($refererExplodeArray)];
+            // id of the question to which the comment was written
+            $refererQuestionId = $refererExplodeArray[array_key_last($refererExplodeArray)];
 
-        if ($refererQuestionId == $question_id) {
-            if (isset($type) && $type != 1)
-                return false;
+            if ($refererQuestionId == $question_id) {
+                if (isset($type) && $type != 1)
+                    return false;
 
-            if (isset($parent_id)) {
-                $commentExist = Comments::find()->where(['id' => $parent_id])->exists();
+                if (isset($parent_id)) {
+                    $commentExist = Comments::find()->where(['id' => $parent_id])->exists();
 
-                if ($commentExist) 
-                    return true;
+                    if ($commentExist) 
+                        return true;
+                    else 
+                        return false;
+                }
+
+                return true;
             }
-
-            return true;
+        } else if ($type == 'edit') {
+            extract($getData, EXTR_OVERWRITE); // $comment_id, $old_content -- get-parametrs data
+            
+            $comment = Comments::findOne($comment_id);
+            if (
+                $comment->isAuthor(Yii::$app->view->params['user'])
+                && html::decode($comment->content) == html::decode($old_content)
+            ) {
+                return $comment;
+            }
         }
 
         return false;
@@ -117,6 +132,14 @@ class QuestionHelper
                     $answer->childComments[] = $comment;
                 }
             }
+        }
+    }
+
+    public static function checkUserHaveAnswer($user, $answers)
+    {
+        foreach ($answers as $answer) {
+            if ($answer->isAuthor($user))
+                return true;
         }
     }
 }

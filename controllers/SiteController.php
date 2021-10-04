@@ -9,6 +9,7 @@ use yii\web\Controller;
 use app\components\UrlGenHelper;
 use app\components\QuestionsGetHelper;
 use app\components\QuestionHelper;
+use app\models\Comments;
 use app\models\CommentsPosting;
 
 class SiteController extends Controller
@@ -30,7 +31,7 @@ class SiteController extends Controller
                 ],
             ],
             [
-                'class' => 'app\filters\NeededVariables',
+                'class' => 'app\filters\NeededForSiteVariables',
             ],
         ];
     }
@@ -94,5 +95,26 @@ class SiteController extends Controller
         $message = $exception->getMessage();
 
         return $this->render('error', compact('message'));
+    }
+
+    public function actionCommentCreate($question_id, $parent_id = null, $type = null)
+    {
+        if (Yii::$app->request->isPost) {
+            if (QuestionHelper::validateGetData([
+                    'referer_url' => $_SERVER['HTTP_REFERER'], 
+                    'question_id' => $question_id,
+                    'parent_id' => $parent_id,
+                    'type' => $type,
+                ], 'create')
+            ) {
+                $model = new CommentsPosting;
+                
+                if ($model->load(Yii::$app->request->post(), 'CommentsPosting')) {
+                    $model->createComment($question_id, $parent_id, $type);
+                }
+            }
+        }
+
+        return $this->redirect($_SERVER['HTTP_REFERER']);
     }
 }
