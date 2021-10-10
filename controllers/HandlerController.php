@@ -11,6 +11,7 @@ use yii\web\MethodNotAllowedHttpException;
 use app\models\UserToQuestionSub;
 use app\models\UserToCommentLike;
 use yii\base\InvalidValueException;
+use app\filters\NeededForAllVariables;
 
 /*
    Class for handling ajax requests
@@ -20,9 +21,7 @@ class HandlerController extends Controller
     public function behaviors()
     {
         return [
-            [
-                'class' => 'app\filters\NeededForAllVariables',
-            ],
+            NeededForAllVariables::class,
         ];
     }
 
@@ -31,9 +30,9 @@ class HandlerController extends Controller
         if (Yii::$app->request->isAjax) {
             $model = UserToCommentLike::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'comment_id' => $comment_id])->one();
 
-            if ($model) {
+            if ($model) 
                 return $model->delete();
-            } else {
+            else {
                 $model = new UserToCommentLike;
 
                 return $model->createRelation($comment_id);
@@ -48,9 +47,9 @@ class HandlerController extends Controller
         if (Yii::$app->request->isAjax) {
             $model = UserToQuestionSub::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'question_id' => $question_id])->one();
 
-            if ($model) {
+            if ($model) 
                 return $model->delete();
-            } else {
+            else {
                 $model = new UserToQuestionSub;
 
                 return $model->createRelation($question_id);
@@ -64,9 +63,9 @@ class HandlerController extends Controller
     {
         if (Yii::$app->request->isAjax) {
             $model = Comments::findOne($comment_id);
-            if ($model->isAuthor(Yii::$app->view->params['user'])) {
+            if ($model->isAuthor(Yii::$app->view->params['user'])) 
                 return $model->delete();
-            } else 
+            else 
                 throw new InvalidValueException('На обработку получены некорректные данные');
         }
 
@@ -85,6 +84,19 @@ class HandlerController extends Controller
 
                 return $comment->save(false);
             } else 
+                throw new InvalidValueException('На обработку получены некорректные данные');
+        }
+
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
+
+    public function actionComplain($comment_id)
+    {
+        if (Yii::$app->request->isAjax) {
+            $model = Comments::findOne($comment_id);
+            if ($model) 
+                return QuestionHelper::complain($model);
+            else 
                 throw new InvalidValueException('На обработку получены некорректные данные');
         }
 

@@ -3,6 +3,7 @@
 namespace app\components;
 
 use app\models\Comments;
+use app\models\UserToCommentComplaint;
 use Yii;
 use yii\helpers\Html;
 
@@ -60,7 +61,7 @@ class QuestionHelper
     }
 
     /*
-       Checking for the existence of a record in a linked table (UserToCommentLike, UserToQuestionSub) only
+       Checking for the existence of a record in a linked table (UserToCommentLike, UserToQuestionSub, UserToQuestionViews, UserToQuestionComplain)
     */
     public static function existCheck($linkName, $data)
     {
@@ -140,6 +141,22 @@ class QuestionHelper
         foreach ($answers as $answer) {
             if ($answer->isAuthor($user))
                 return true;
+        }
+    }
+
+    public static function complain($comment)
+    {
+        if (
+            !self::existCheck(UserToCommentComplaint::class, ['comment_id' => $comment->id])
+            && !$comment->isAuthor(Yii::$app->view->params['user'])
+        ) {
+            $comment->updateCounters(['complaints' => 1]);
+
+            $linkModel = new UserToCommentComplaint;
+            $linkModel->user_id = Yii::$app->view->params['user']->id;
+            $linkModel->comment_id = $comment->id;
+
+            return $linkModel->save();
         }
     }
 }
