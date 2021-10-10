@@ -9,8 +9,8 @@ use yii\web\Controller;
 use app\components\UrlGenHelper;
 use app\components\QuestionsGetHelper;
 use app\components\QuestionHelper;
-use app\models\Comments;
 use app\models\CommentsPosting;
+use app\filters\NeededForSiteVariables;
 
 class SiteController extends Controller
 {
@@ -30,9 +30,11 @@ class SiteController extends Controller
                     ],
                 ],
             ],
-            [
-                'class' => 'app\filters\NeededForSiteVariables',
+            'views' => [
+                'class' => 'app\filters\ViewsCountFilter',
+                'only' => ['single'],
             ],
+            NeededForSiteVariables::class,
         ];
     }
     
