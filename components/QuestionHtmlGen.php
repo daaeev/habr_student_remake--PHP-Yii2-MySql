@@ -44,7 +44,7 @@ class QuestionHtmlGen
 
     public static function views($question)
     {
-        $count = $question->viewed;
+        $count = count($question->userToQuestionViews);
 
         return $count . ' ' . QuestionHelper::numToWord($count, ['просмотр', 'просмотра', 'просмотров']);
     }
@@ -118,9 +118,13 @@ class QuestionHtmlGen
         return self::generateButton($class, $title);
     }
 
-    public static function generateQuestionControlButtons($comment, $user)
+    /* 
+       Generation of buttons such as edit, delete, etc.
+       $object --> comment or question
+    */
+    public static function generateQuestionControlButtons($object, $user, $type = 'comment')
     {
-        if ($comment->isAuthor($user)) {
+        if ($object->isAuthor($user)) {
             $buttons = [
                 'edit' => self::generateButton('control-btn edit-btn', '<i class="bi bi-pencil-fill"></i>'),
                 'delete' => self::generateButton('control-btn delete-btn', '<i class="bi bi-trash-fill"></i>'),
@@ -129,6 +133,10 @@ class QuestionHtmlGen
             $buttons = [
                 'complain' => self::generateButton('control-btn complain-btn', '<i class="bi bi-shield-fill-exclamation"></i>'),
             ];
+            
+            if ($type != 'comment') {
+                $buttons = [];
+            }
         }
 
         foreach ($buttons as $button) {
@@ -155,11 +163,71 @@ class QuestionHtmlGen
         return '<button type="button" class="' . $class . '">' . $title . '</button>';
     }
 
-    public static function contentProcessing($text)
+    /*
+       Обработчик текста. Функция экранирует весь контент, кроме определённых тегов ($tagsLetters)
+    */
+    public static function contentProcessing(string $str)
     {
-        // TODO...
+        $tagsLetters = ['b', 's', 'q', 'code'];  // перечёркнутый s, жирный b, код code, цитата q
 
-        $content = $text;
-        return Html::encode($content);
+        $result = '';
+        $openAndCloseTags = []; // openTag => closeTag
+        
+        // Получил открывающий и закрывающий теги
+        foreach ($tagsLetters as $tag) {
+            $openTag = '<' . $tag . '>';
+            $closeTag = '</' . $tag . '>';
+        
+            $openAndCloseTags[$openTag] = $closeTag;
+        }
+        
+        // Заменил закрывающие теги на сгенерированным разделитель типа: '-?#14#&-'
+        $replacedCloseTagsString = $str;
+        $replaceString = '-?#' . rand(10, 20) . '#&-';
+        
+        foreach ($openAndCloseTags as $openTag => $closeTag) {
+            $replacedCloseTagsString = str_replace($closeTag, $replaceString, $replacedCloseTagsString);
+        }
+        
+        // Разбил главную строку по сгенерированным разделителям ($replacedCloseTagsString)
+        $exploadedByReplacedCloseTag = explode($replaceString, $replacedCloseTagsString);
+        
+        // Получил общее количество тегов в строке, которое нужно экранировать (нужно при результирующей обработке)
+        $countOfNotEncodeTags = 0;
+        foreach ($exploadedByReplacedCloseTag as $string) {
+            foreach($openAndCloseTags as $openTag => $closeTag) {
+                if (is_numeric(strpos($string, $openTag))) {
+                    $countOfNotEncodeTags++;
+                }
+            }
+        }
+
+        // Если нет тегов, которые НЕ нужно экранировать, то возвращаем экранированный основной контент
+        if ($countOfNotEncodeTags == 0) {
+            return htmlspecialchars($str);
+        }
+        
+        // Обработал $exploadedByReplacedCloseTag, получив результирующую строку
+        $iter = 0;
+        foreach ($exploadedByReplacedCloseTag as $string) {
+            foreach ($openAndCloseTags as $openTag => $closeTag) {
+        
+                // Если есть указанный тег в строке, то разбиваем её по нему и соединяем, экранирую нужный контент
+                if (is_numeric(strpos($string, $openTag))) {
+                    $explodeContent = explode($openTag, $string);
+                    $result .= htmlspecialchars($explodeContent[0]) . $openTag . htmlspecialchars($explodeContent[1]) . $closeTag;
+                }
+                
+                // Если тегов больше не осталось и остался контент, то добавляем его в результирующею строку
+                if ($iter == ($countOfNotEncodeTags - 1)) {
+                    $result .= htmlspecialchars($exploadedByReplacedCloseTag[$iter + 1]);
+                    break 2;
+                }
+            }
+        
+            $iter++;
+        }
+        
+        return $result;
     }
 }

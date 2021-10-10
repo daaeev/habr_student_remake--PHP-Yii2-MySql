@@ -31,8 +31,14 @@ use yii\helpers\Html;
         </div>
 
         <div class="soc_buttons">
-            <?= QuestionHtmlGen::subscribesButton($question) ?>
-            <?= QuestionHtmlGen::commentsButton($comments['mainComments'], 'comments-btn main_comments-btn') ?>
+            <div class="info-buttons">
+                <?= QuestionHtmlGen::subscribesButton($question) ?>
+                <?= QuestionHtmlGen::commentsButton($comments['mainComments'], 'comments-btn main_comments-btn') ?>
+            </div>
+
+            <div class="control-buttons">
+                <?= QuestionHtmlGen::generateQuestionControlButtons($question, Yii::$app->view->params['user'], 'question') ?>
+            </div>
         </div>
 
         <div class="comments_block main_comments">
