@@ -24,26 +24,24 @@ function error() {
 $('.comments-btn').on('click', function () {
     let mainCommentsCount = $(this).parent('.soc_buttons').siblings('.comments_block').children('.comment').length;
     let commentsToAnswerCount = $(this).siblings('.comments_block').children('.comment').length;
-
-    if (!(mainCommentsCount || commentsToAnswerCount)) {
-        if (authCheck()) {
-            if (!$(this).hasClass('view')) {
-                if ($(this).hasClass('main_comments-btn')) {
-                    $('.main_comments').css('display', 'block');
-                } else {
-                    $(this).siblings('.comments_block').css('display', 'block');
-                }
-        
-                $(this).addClass('view');
+    
+    if (mainCommentsCount || commentsToAnswerCount || authCheck()) {
+        if (!$(this).hasClass('view')) {
+            if ($(this).hasClass('main_comments-btn')) {
+                $('.main_comments').css('display', 'block');
             } else {
-                if ($(this).hasClass('main_comments-btn')) {
-                    $('.main_comments').css('display', 'none');
-                } else {
-                    $(this).siblings('.comments_block').css('display', 'none');
-                }
-        
-                $(this).removeClass('view');
+                $(this).siblings('.comments_block').css('display', 'block');
             }
+    
+            $(this).addClass('view');
+        } else {
+            if ($(this).hasClass('main_comments-btn')) {
+                $('.main_comments').css('display', 'none');
+            } else {
+                $(this).siblings('.comments_block').css('display', 'none');
+            }
+    
+            $(this).removeClass('view');
         }
     }
 })
@@ -98,7 +96,7 @@ $('.subscribe-btn').on('click', function () {
 */
 $('.like-btn').on('click', function () {
     if(authCheck()) {
-        let comm_id = $(this).siblings('.comm_id').val();
+        let comm_id = $(this).siblings('.comment_id').val();
         let button = $(this);
 
         if (isNaN(comm_id))
@@ -116,19 +114,19 @@ $('.like-btn').on('click', function () {
                 setTimeout(() => button.attr('disabled', false), 1000);
 
                 if (!button.hasClass('cl')) {
-                    if (button.children('span').length) {
+                    if (button.children('span').length)
                         button.children('span').text(Number(button.children('span').text()) + 1);
-                    } else {
+                    else 
                         button.html(button.text() + ' <span>1</span>');
-                    }
+                    
         
                     button.addClass('cl');
                 } else {
-                    if (Number(button.children('span').text()) == 1) {
+                    if (Number(button.children('span').text()) == 1)
                         button.text('Нравится');
-                    } else {
+                    else 
                         button.html('Нравится ' + '<span>' +  (Number(button.children('span').text()) - 1) + '</span>');
-                    }
+                    
         
                     button.removeClass('cl');
                 }

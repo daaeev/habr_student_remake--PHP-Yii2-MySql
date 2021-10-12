@@ -18,7 +18,7 @@ class ViewsCountFilter extends ActionFilter
             && !QuestionHelper::existCheck(UserToQuestionViews::class, ['question_id' => $question_id])
         ) {
             $model = new UserToQuestionViews;
-            $model->user_id = Yii::$app->view->params['user']->id;
+            $model->user_id = Yii::$app->user->getId();
             $model->question_id = $question_id;
             $model->save();
 
