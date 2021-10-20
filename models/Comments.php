@@ -2,10 +2,9 @@
 
 namespace app\models;
 
-use Yii;
-
 class Comments extends \yii\db\ActiveRecord
 {
+    use \app\components\AuthorCheckBehavior;
     public $childComments = [];
 
     public static function tableName()
@@ -17,7 +16,7 @@ class Comments extends \yii\db\ActiveRecord
     {
         return [
             [['content'], 'string'],
-            [['author_id', 'question_id', 'comment_kind', 'parent_comment_id'], 'integer'],
+            [['author_id', 'question_id', 'comment_kind', 'parent_comment_id', 'complaints'], 'integer'],
             [['pub_date'], 'default', 'value' => time()],
             [['author_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
             [['question_id'], 'exist', 'skipOnError' => true, 'targetClass' => Question::class, 'targetAttribute' => ['question_id' => 'id']],
@@ -34,13 +33,8 @@ class Comments extends \yii\db\ActiveRecord
             'pub_date' => 'Pub Date',
             'comment_kind' => 'Comment Kind',
             'parent_comment_id' => 'Parent Comment ID',
+            'complaints' => 'Complaints'
         ];
-    }
-
-    public function isAuthor($user)
-    {
-        if ($this->author->id == @$user->id)
-            return true;
     }
 
     public function getAuthor()
@@ -56,5 +50,10 @@ class Comments extends \yii\db\ActiveRecord
     public function getUserToCommentLikes()
     {
         return $this->hasMany(UserToCommentLike::class, ['comment_id' => 'id']);
+    }
+
+    public function getUserToCommentComplaints()
+    {
+        return $this->hasMany(UserToCommentComplaint::class, ['comment_id' => 'id']);
     }
 }

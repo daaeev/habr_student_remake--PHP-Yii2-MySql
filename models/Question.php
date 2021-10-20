@@ -6,6 +6,8 @@ use Yii;
 
 class Question extends \yii\db\ActiveRecord
 {
+    use \app\components\AuthorCheckBehavior;
+    
     public static function tableName()
     {
         return 'question';
@@ -15,7 +17,7 @@ class Question extends \yii\db\ActiveRecord
     {
         return [
             [['content', 'tags'], 'string'],
-            [['author_id', 'status', 'viewed'], 'integer'],
+            [['author_id', 'status', 'views'], 'integer'],
             [['pub_date'], 'default', 'value' => time()],
             [['title'], 'string', 'max' => 255],
             [['author_id'], 'exist', 'targetClass' => User::class, 'targetAttribute' => ['author_id' => 'id']],
@@ -30,7 +32,6 @@ class Question extends \yii\db\ActiveRecord
             'content' => 'Content',
             'author_id' => 'Author',
             'status' => 'Status',
-            'viewed' => 'Viewed',
             'pub_date' => 'Pub Date',
             'difficulty' => 'Difficulty',
             'ban_reason' => 'Ban Reason'
@@ -75,5 +76,10 @@ class Question extends \yii\db\ActiveRecord
     public function getUserToQuestionSubs()
     {
         return $this->hasMany(UserToQuestionSub::class, ['question_id' => 'id']);
+    }
+
+    public function getUserToQuestionViews()
+    {
+        return $this->hasMany(UserToQuestionViews::class, ['question_id' => 'id']);
     }
 }
