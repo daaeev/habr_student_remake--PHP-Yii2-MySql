@@ -14,11 +14,13 @@ class FloatingPanelAsset extends AssetBundle
         'public/css/ask.css',
         'public/css/aside.css',
         'public/css/tags.css',
+        'public/css/formButtons.css',
     ];
     public $js = [
         'public/js/FloatingPanel.js',
         'public/js/SettingsLinksCustomize.js',
         'public/js/QuestionButtons.js',
+        'public/js/FormButtons.js',
     ];
     public $depends = [
         'app\assets\DependsAsset',
