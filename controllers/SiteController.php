@@ -58,7 +58,7 @@ class SiteController extends Controller
         $question = QuestionsGetHelper::questionById($id);
         $author = $question->author;
         $comments = QuestionHelper::splitComments($question->comments);
-        $similar_questions = QuestionsGetHelper::questionByTag($question->id, $question->questionToTagTags[0]->tag_id);
+        $similar_questions = QuestionsGetHelper::similarQuestionsByTag($question->id, $question->questionToTagTags[0]->tag_id);
         $model = new CommentsPosting;
 
         return $this->render('single', compact('question', 'author', 'comments', 'similar_questions', 'model'));
@@ -69,9 +69,15 @@ class SiteController extends Controller
         return $this->render('tags');
     }
 
-    public function actionTag()
+    public function actionTag($id)
     {
-        return $this->render('index');
+        // -1, because the question with the specified id will not be displayed, which is not necessary
+        $questions_data = QuestionsGetHelper::questionsByTag($id);
+
+        return $this->render('index', [
+            'questions' => $questions_data['questions'],
+            'pagination' => $questions_data['pagination'],
+        ]);
     }
 
     public function actionCreateQuestion()

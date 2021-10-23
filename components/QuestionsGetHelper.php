@@ -19,9 +19,11 @@ class QuestionsGetHelper
     public static function interesting()
     {
         $questions_query = Question::find()
+            ->cache(100)
             ->where(['status' => 1])
-            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments')
-            ->orderBy('viewed DESC');
+            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+            ->orderBy('views DESC');
+
         $data = self::getPaginationData($questions_query);
         
         return $data;
@@ -33,9 +35,11 @@ class QuestionsGetHelper
     public static function new()
     {
         $questions_query = Question::find()
+            ->cache(100)
             ->where(['status' => 1])
-            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments')
+            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
             ->orderBy('id DESC');
+
         $data = self::getPaginationData($questions_query);
         
         return $data;
@@ -47,10 +51,30 @@ class QuestionsGetHelper
     public static function noanswer()
     {
         $questions_query = Question::find()
+            ->cache(100)
             ->joinWith('comments')
             ->where(['status' => 1, 'comments.question_id' => null])
-            ->with('questionToTagTags.tag', 'userToQuestionSubs')
+            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
             ->orderBy('id DESC');
+
+        $data = self::getPaginationData($questions_query);
+        
+        return $data;
+    }
+
+    /*
+       Get a question for a given tag
+    */
+    public static function questionsByTag($tag_id)
+    {
+        $questions_query = Question::find()
+            ->cache(100)
+            ->joinWith('questionToTagTags QuesToTag')
+            ->where(['status' => 1])
+            ->andWhere(['QuesToTag.tag_id' => $tag_id])
+            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+            ->orderBy('id DESC');
+
         $data = self::getPaginationData($questions_query);
         
         return $data;
@@ -63,6 +87,7 @@ class QuestionsGetHelper
     {
         $countQuery = $query->count();
         $pagination = new Pagination(['totalCount' => $countQuery, 'pageSize' => 20]);
+        
         $questions = $query->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
@@ -76,6 +101,7 @@ class QuestionsGetHelper
     public static function sidebarQuestions()
     {
         $questions = Question::find()
+            ->cache(100)
             ->where(['status' => 1])
             ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments')
             ->where(['>=', 'pub_date', new Expression('UNIX_TIMESTAMP(NOW() - INTERVAL 1 DAY)')])
@@ -93,7 +119,7 @@ class QuestionsGetHelper
         $model = Question::find()
             ->where(['id' => $id])
             ->andWhere(['!=', 'status', 0])
-            ->with('author', 'comments.author', 'comments.userToCommentLikes', 'questionToTagTags.tag', 'userToQuestionSubs')
+            ->with('author', 'comments.author', 'comments.userToCommentLikes', 'questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
             ->one();
 
         /*
@@ -115,13 +141,14 @@ class QuestionsGetHelper
     /*
        Finds a question by tag
     */
-    public static function questionByTag($question_id, $tag_id)
+    public static function similarQuestionsByTag($question_id, $tag_id)
     {
         $questions = Question::find()
+            ->cache(100)
             ->joinWith('questionToTagTags tags')
             ->where(['tags.tag_id' => $tag_id, 'status' => 1])
             ->andWhere(['!=', 'question.id', $question_id])
-            ->with('comments', 'userToQuestionSubs')
+            ->with('comments', 'userToQuestionSubs', 'questionToTagTags.tag', 'userToQuestionViews')
             ->limit(10)
             ->all();
         
