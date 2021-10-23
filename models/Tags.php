@@ -2,11 +2,12 @@
 
 namespace app\models;
 
-use app\components\ImageInterface;
 use Yii;
 
-class Tags extends \yii\db\ActiveRecord implements ImageInterface
+class Tags extends \yii\db\ActiveRecord
 {
+    use \app\components\GetImageBehavior;
+
     /**
      * {@inheritdoc}
      */
@@ -21,7 +22,7 @@ class Tags extends \yii\db\ActiveRecord implements ImageInterface
     public function rules()
     {
         return [
-            [['tag_name', 'tag_image'], 'string', 'max' => 255],
+            [['tag_name', 'image'], 'string', 'max' => 255],
         ];
     }
 
@@ -33,13 +34,8 @@ class Tags extends \yii\db\ActiveRecord implements ImageInterface
         return [
             'id' => 'ID',
             'tag_name' => 'Tag Name',
-            'tag_image' => 'Tag Image',
+            'image' => 'Image',
         ];
-    }
-
-    public function getImage(): string
-    {
-        return '/uploads/tags/' . $this->tag_image;
     }
 
     /**
