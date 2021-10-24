@@ -2,16 +2,19 @@
 
 namespace app\controllers;
 
-use app\components\QuestionHelper;
+use app\components\questions\QuestionHelper;
 use app\models\Comments;
-use app\components\QuestionHtmlGen;
+use app\components\questions\QuestionHtmlGen;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 use app\models\UserToQuestionSub;
 use app\models\UserToCommentLike;
+use app\models\UserToTagSub;
 use yii\base\InvalidValueException;
 use app\filters\NeededForAllVariables;
+use app\models\Question;
+use app\models\Tags;
 
 /*
    Class for handling ajax requests
@@ -28,32 +31,55 @@ class HandlerController extends Controller
     public function actionLike($comment_id)
     {
         if (Yii::$app->request->isAjax) {
-            $model = UserToCommentLike::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'comment_id' => $comment_id])->one();
+            if (Comments::find()->where(['id' => $comment_id])->exists()) {
+                $model = UserToCommentLike::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'comment_id' => $comment_id])->one();
 
-            if ($model) 
-                return $model->delete();
-            else {
-                $model = new UserToCommentLike;
+                if ($model) 
+                    return $model->delete();
+                else {
+                    $model = new UserToCommentLike;
 
-                return $model->createRelation($comment_id);
-            }
+                    return $model->createRelation($comment_id);
+                }
+            } else throw new InvalidValueException('На обработку получены некорректные данные');
         }
         
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
     }
 
-    public function actionSub($question_id)
+    public function actionSubQuestion($question_id)
     {
         if (Yii::$app->request->isAjax) {
-            $model = UserToQuestionSub::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'question_id' => $question_id])->one();
+            if (Question::find()->where(['id' => $question_id])->exists()) {
+                $model = UserToQuestionSub::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'question_id' => $question_id])->one();
 
-            if ($model) 
-                return $model->delete();
-            else {
-                $model = new UserToQuestionSub;
+                if ($model) 
+                    return $model->delete();
+                else {
+                    $model = new UserToQuestionSub;
 
-                return $model->createRelation($question_id);
-            }
+                    return $model->createRelation($question_id);
+                }
+            } else throw new InvalidValueException('На обработку получены некорректные данные');
+        }
+
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
+
+    public function actionSubTag($tag_id)
+    {
+        if (Yii::$app->request->isAjax) {
+            if (Tags::find()->where(['id' => $tag_id])->exists()) {
+                $model = UserToTagSub::find()->where(['user_id' => Yii::$app->view->params['user']->id, 'tag_id' => $tag_id])->one();
+                
+                if ($model) 
+                    return $model->delete();
+                else {
+                    $model = new UserToTagSub;
+
+                    return $model->createRelation($tag_id);
+                }
+            } else throw new InvalidValueException('На обработку получены некорректные данные');
         }
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
