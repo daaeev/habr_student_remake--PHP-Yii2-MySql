@@ -1,9 +1,9 @@
 <?php
 
-namespace app\components;
+namespace app\components\questions;
 
 use app\components\UrlGenHelper;
-use app\components\QuestionHelper;
+use app\components\questions\QuestionHelper;
 use app\models\UserToCommentLike;
 use app\models\UserToQuestionSub;
 use yii\helpers\Html;
@@ -129,6 +129,9 @@ class QuestionHtmlGen
                 'edit' => self::generateButton('control-btn edit-btn', '<i class="bi bi-pencil-fill"></i>'),
                 'delete' => self::generateButton('control-btn delete-btn', '<i class="bi bi-trash-fill"></i>'),
             ];
+
+            if ($type == 'question') 
+                unset($buttons['edit']);
         } else {
             $buttons = [
                 'complain' => self::generateButton('control-btn complain-btn', '<i class="bi bi-shield-fill-exclamation"></i>'),
@@ -147,9 +150,11 @@ class QuestionHtmlGen
     public static function generateFormHelpButtons()
     {
         $buttons = [
-            'some1' => self::generateButton('', 'B'),
-            'some2' => self::generateButton('', 'B'),
-            'some3' => self::generateButton('', 'B'),
+            'bold' => self::generateButton('form_bold-btn', 'B'),
+            'italic' => self::generateButton('form_italic-btn', 'B'),
+            'underline' => self::generateButton('form_underline-btn', 'B'),
+            'crossed' => self::generateButton('form_crossed-btn', 'B'),
+            'code' => self::generateButton('form_code-btn', htmlspecialchars('</>')),
         ];
 
 
@@ -168,7 +173,7 @@ class QuestionHtmlGen
     */
     public static function contentProcessing(string $str)
     {
-        $tagsLetters = ['b', 's', 'q', 'code'];  // перечёркнутый s, жирный b, код code, цитата q
+        $tagsLetters = ['b', 'i', 'u', 's', 'code'];
 
         $result = '';
         $openAndCloseTags = []; // openTag => closeTag

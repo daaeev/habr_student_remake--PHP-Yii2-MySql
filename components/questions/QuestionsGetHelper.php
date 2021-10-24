@@ -1,17 +1,17 @@
 <?php
 
-namespace app\components;
+namespace app\components\questions;
 
 use app\models\Question;
-use yii\data\Pagination;
 use yii\db\Expression;
 use yii\web\NotFoundHttpException;
+use app\components\lib\GetHelperClass;
 
 /*
    Class for getting the question, 
    depending on the requested type using pagination
 */
-class QuestionsGetHelper
+class QuestionsGetHelper extends GetHelperClass
 {
     /*
        Receives the most viewed questions
@@ -78,21 +78,6 @@ class QuestionsGetHelper
         $data = self::getPaginationData($questions_query);
         
         return $data;
-    }
-
-    /*
-       Algorithm for creating pagination described in the documentation
-    */
-    private static function getPaginationData($query)
-    {
-        $countQuery = $query->count();
-        $pagination = new Pagination(['totalCount' => $countQuery, 'pageSize' => 20]);
-        
-        $questions = $query->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->all();
-
-        return compact('pagination', 'questions');
     }
 
     /*

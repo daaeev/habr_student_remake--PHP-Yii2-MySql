@@ -51,4 +51,14 @@ class UrlGenHelper
     {
         return '/q/' . $id;
     }
+
+    public static function user($id)
+    {
+        return '/profile/' . $id;
+    }
+
+    public static function tag($id)
+    {
+        return '/t/' . $id;
+    }
 }

@@ -1,11 +1,8 @@
 <?php
 
-namespace app\components;
+namespace app\components\lib;
 
-/*
-   Helper class for data processing
-*/
-class TagsHelper 
+class HelperClass 
 {
     /*
        Modifies a word based on a number

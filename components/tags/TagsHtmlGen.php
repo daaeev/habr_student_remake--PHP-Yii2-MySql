@@ -1,8 +1,8 @@
 <?php
 
-namespace app\components;
+namespace app\components\tags;
 
-use app\components\TagsHelper;
+use app\components\tags\TagsHelper;
 
 /*
    Helper class for generating html code for tags
