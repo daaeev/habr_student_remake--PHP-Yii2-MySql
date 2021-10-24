@@ -14,10 +14,10 @@ class GetHelperClass
         $countQuery = $query->count();
         $pagination = new Pagination(['totalCount' => $countQuery, 'pageSize' => 20]);
         
-        $questions = $query->offset($pagination->offset)
+        $elements = $query->offset($pagination->offset)
             ->limit($pagination->limit)
             ->all();
 
-        return compact('pagination', 'questions');
+        return compact('pagination', 'elements');
     }
 }
