@@ -6,6 +6,7 @@ use app\models\Question;
 use yii\db\Expression;
 use yii\web\NotFoundHttpException;
 use app\components\lib\GetHelperClass;
+use app\models\UserToTagSub;
 
 /*
    Class for getting the question, 
@@ -13,52 +14,77 @@ use app\components\lib\GetHelperClass;
 */
 class QuestionsGetHelper extends GetHelperClass
 {
-    /*
-       Receives the most viewed questions
-    */
-    public static function interesting()
+    public static function questionByCategoryIndex($category)
     {
-        $questions_query = Question::find()
+        $query = Question::find()
             ->cache(100)
-            ->where(['status' => 1])
-            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
-            ->orderBy('views DESC');
+            ->where(['status' => 1]);
 
-        $data = self::getPaginationData($questions_query);
-        
+        switch ($category):
+            case 'interesting':
+                $query = $query
+                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+                    ->orderBy('views DESC');
+                break;
+
+            case 'new':
+                $query = $query
+                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+                    ->orderBy('id DESC');
+                break;
+
+            case 'noanswer':
+                $query = $query
+                    ->joinWith('comments')
+                    ->andWhere(['comments.question_id' => null])
+                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
+                    ->orderBy('id DESC');
+                break;
+        endswitch;
+
+        $data = self::getPaginationData($query);
+
         return $data;
     }
 
-    /*
-       Gets the most recent questions
-    */
-    public static function new()
+    public static function questionByCategoryMy($category, $user_id)
     {
-        $questions_query = Question::find()
+        $tags_id_array = UserToTagSub::find()
+            ->select(['id'])
+            ->where(['user_id' => $user_id])
+            ->all();
+
+        $query = Question::find()
             ->cache(100)
             ->where(['status' => 1])
-            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
-            ->orderBy('id DESC');
+            ->joinWith('questionToTagTags tags')
+            ->andWhere(['tags.tag_id' => 36]);
 
-        $data = self::getPaginationData($questions_query);
-        
-        return $data;
-    }
 
-    /*
-       Gets unanswered questions
-    */
-    public static function noanswer()
-    {
-        $questions_query = Question::find()
-            ->cache(100)
-            ->joinWith('comments')
-            ->where(['status' => 1, 'comments.question_id' => null])
-            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
-            ->orderBy('id DESC');
+        switch ($category):
+            case 'interesting':
+                $query = $query
+                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+                    ->orderBy('views DESC');
+                break;
 
-        $data = self::getPaginationData($questions_query);
-        
+            case 'new':
+                $query = $query
+                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+                    ->orderBy('id DESC');
+                break;
+
+            case 'noanswer':
+                $query = $query
+                    ->joinWith('comments')
+                    ->andWhere(['comments.question_id' => null])
+                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
+                    ->orderBy('id DESC');
+                break;
+        endswitch;
+
+        $data = self::getPaginationData($query);
+
         return $data;
     }
 

@@ -7,8 +7,9 @@ use app\models\AskForm;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use app\components\UrlGenHelper;
-use app\components\QuestionsGetHelper;
-use app\components\QuestionHelper;
+use app\components\questions\QuestionsGetHelper;
+use app\components\tags\TagsGetHelper;
+use app\components\questions\QuestionHelper;
 use app\models\CommentsPosting;
 use app\filters\NeededForSiteVariables;
 
@@ -40,17 +41,22 @@ class SiteController extends Controller
     
     public function actionIndex($category = 'interesting')
     {
-        $questions_data = QuestionsGetHelper::$category();
+        $questions_data = QuestionsGetHelper::questionByCategoryIndex($category);
 
         return $this->render('index', [
-            'questions' => $questions_data['questions'],
+            'questions' => $questions_data['elements'],
             'pagination' => $questions_data['pagination'],
         ]);
     }
 
-    public function actionMy()
+    public function actionMy($category = 'interesting')
     {
-        return $this->render('index');
+        $questions_data = QuestionsGetHelper::questionByCategoryIndex($category, Yii::$app->view->params['user']->id);
+
+        return $this->render('index', [
+            'questions' => $questions_data['elements'],
+            'pagination' => $questions_data['pagination'],
+        ]);
     }
 
     public function actionSingle($id)
@@ -64,18 +70,29 @@ class SiteController extends Controller
         return $this->render('single', compact('question', 'author', 'comments', 'similar_questions', 'model'));
     }
 
+    /*
+       Displaying existing tags
+    */
     public function actionTags()
     {
-        return $this->render('tags');
+        $tags_data = TagsGetHelper::allTags();
+
+        return $this->render('tags', [
+            'tags' => $tags_data['elements'],
+            'pagination' => $tags_data['pagination'],
+        ]);
     }
 
+    /*
+       Displaying questions with the same tag
+    */
     public function actionTag($id)
     {
         // -1, because the question with the specified id will not be displayed, which is not necessary
         $questions_data = QuestionsGetHelper::questionsByTag($id);
 
         return $this->render('index', [
-            'questions' => $questions_data['questions'],
+            'questions' => $questions_data['elements'],
             'pagination' => $questions_data['pagination'],
         ]);
     }
