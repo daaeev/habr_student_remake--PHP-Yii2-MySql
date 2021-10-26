@@ -41,7 +41,7 @@ class SiteController extends Controller
     
     public function actionIndex($category = 'interesting')
     {
-        $questions_data = QuestionsGetHelper::questionByCategory($category, 'index');
+        $questions_data = QuestionsGetHelper::questionsByCategory($category, 'index');
 
         return $this->render('index', [
             'questions' => $questions_data['elements'],
@@ -51,7 +51,7 @@ class SiteController extends Controller
 
     public function actionMy($category = 'interesting')
     {
-        $questions_data = QuestionsGetHelper::questionByCategory($category, 'my', Yii::$app->view->params['user']->id);
+        $questions_data = QuestionsGetHelper::questionsByCategory($category, 'my', user_id: Yii::$app->view->params['user']->id);
 
         return $this->render('index', [
             'questions' => $questions_data['elements'],
@@ -86,14 +86,14 @@ class SiteController extends Controller
     /*
        Displaying questions with the same tag
     */
-    public function actionTag($id)
+    public function actionTag($id, $category)
     {
-        // -1, because the question with the specified id will not be displayed, which is not necessary
-        $questions_data = QuestionsGetHelper::questionsByTag($id);
+        $questions_data = QuestionsGetHelper::questionsByCategory($category, 'by_tag', tag_id: $id);
 
         return $this->render('index', [
             'questions' => $questions_data['elements'],
             'pagination' => $questions_data['pagination'],
+            'tag_id' => $id,
         ]);
     }
 
