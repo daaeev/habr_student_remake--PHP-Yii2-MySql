@@ -41,7 +41,7 @@ class SiteController extends Controller
     
     public function actionIndex($category = 'interesting')
     {
-        $questions_data = QuestionsGetHelper::questionByCategoryIndex($category);
+        $questions_data = QuestionsGetHelper::questionByCategory($category, 'index');
 
         return $this->render('index', [
             'questions' => $questions_data['elements'],
@@ -51,7 +51,7 @@ class SiteController extends Controller
 
     public function actionMy($category = 'interesting')
     {
-        $questions_data = QuestionsGetHelper::questionByCategoryIndex($category, Yii::$app->view->params['user']->id);
+        $questions_data = QuestionsGetHelper::questionByCategory($category, 'my', Yii::$app->view->params['user']->id);
 
         return $this->render('index', [
             'questions' => $questions_data['elements'],
