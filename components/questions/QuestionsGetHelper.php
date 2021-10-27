@@ -18,7 +18,7 @@ class QuestionsGetHelper extends GetHelperClass
     {
         $query = Question::find()
             ->cache(100)
-            ->where(['status' => 1]);
+            ->where(['!=', 'status', 0]);
 
         if ($pageName == 'my'):
             $tags_id_array = UserToTagSub::find()
@@ -69,7 +69,7 @@ class QuestionsGetHelper extends GetHelperClass
     {
         $questions = Question::find()
             ->cache(100)
-            ->where(['status' => 1])
+            ->where(['!=', 'status', 0])
             ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments')
             ->where(['>=', 'pub_date', new Expression('UNIX_TIMESTAMP(NOW() - INTERVAL 1 DAY)')])
             ->limit(10)
@@ -127,7 +127,8 @@ class QuestionsGetHelper extends GetHelperClass
         $questions = Question::find()
             ->cache(100)
             ->joinWith('questionToTagTags tags')
-            ->where(['tags.tag_id' => $tag_id, 'status' => 1])
+            ->where(['tags.tag_id' => $tag_id])
+            ->andWhere(['!=', 'status', 0])
             ->andWhere(['!=', 'question.id', $question_id])
             ->with('comments', 'userToQuestionSubs', 'questionToTagTags.tag', 'userToQuestionViews')
             ->limit(10)
