@@ -5,14 +5,28 @@ namespace app\components\user;
 use app\models\User;
 use app\models\Comments;
 use app\components\lib\GetHelperClass;
+use yii\web\NotFoundHttpException;
 
 class UserGetHelper extends GetHelperClass
 {
     public static function userById($id)
     {
-        return User::find()
+        $model = User::find()
             ->where(['id' => $id])
             ->one();
+        
+        /*
+           Ban check
+        */
+        if ($model) {
+            if ($model->status == 3) {
+                throw new NotFoundHttpException($model->ban_reason);
+            }
+
+            return $model;
+        }
+
+        throw new NotFoundHttpException('Вопрос не найден');
     }
 
     public static function getAnswers($user_id)
