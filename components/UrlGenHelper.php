@@ -56,9 +56,9 @@ class UrlGenHelper
         return '/q/' . $id;
     }
 
-    public static function user($id)
+    public static function user($id, $chapter = 'about')
     {
-        return '/profile/' . $id;
+        return '/profile/' . $id . '/' . $chapter;
     }
 
     public static function tag($id)

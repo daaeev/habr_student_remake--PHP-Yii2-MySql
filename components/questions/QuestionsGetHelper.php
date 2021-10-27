@@ -105,6 +105,20 @@ class QuestionsGetHelper extends GetHelperClass
         throw new NotFoundHttpException('Вопрос не найден');
     }
 
+    public static function questionsByAuthor($author)
+    {
+        $query = Question::find()
+            ->cache(100)
+            ->where(['!=', 'status', 0])
+            ->andWhere(['author_id' => $author->id])
+            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+            ->orderBy('id DESC');
+
+            $data = self::getPaginationData($query);
+
+            return $data;
+    }
+
     /*
        Finds a question by tag
     */

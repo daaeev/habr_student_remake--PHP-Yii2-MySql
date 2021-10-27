@@ -12,6 +12,8 @@ use app\components\tags\TagsGetHelper;
 use app\components\questions\QuestionHelper;
 use app\models\CommentsPosting;
 use app\filters\NeededForSiteVariables;
+use app\components\user\UserGetHelper;
+use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
 {
@@ -108,10 +110,19 @@ class SiteController extends Controller
         return $this->render('ask_question', compact('model'));
     }
 
+    public function actionProfile($id, $chapter)
+    {
+        $user = UserGetHelper::userById($id);
+
+        if (!$user)
+            throw new NotFoundHttpException('Пользователь не найден');
+
+        return $this->render('profile', compact('user', 'chapter'));
+    }
+
     public function actionError()
     {
         $this->layout = 'error';
-
         $exception = Yii::$app->errorHandler->exception;
         if (!$exception) {
             return $this->redirect(UrlGenHelper::home());
