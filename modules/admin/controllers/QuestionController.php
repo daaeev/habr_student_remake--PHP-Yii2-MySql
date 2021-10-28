@@ -68,9 +68,15 @@ class QuestionController extends Controller
         $this->setStatus($this->findModel($id), 1);
     }
 
-    public function actionBan($id)
+    public function actionBanPage($id)
     {
-        $this->setStatus($this->findModel($id), 2);
+        return $this->render('banPage', compact('id'));
+    }
+
+    public function actionBan()
+    {
+        if ($attributes = Yii::$app->request->post()) 
+            $this->setStatus($this->findModel($attributes['question_id']), 2, $attributes['ban_reason']);
     }
 
     protected function findModel($id)
@@ -79,14 +85,15 @@ class QuestionController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Страница не найдена');
     }
 
-    private function setStatus(Question $question, int $status)
+    private function setStatus(Question $question, int $status, $ban_reason = '')
     {
         $question->status = $status;
+        $question->ban_reason = $ban_reason;
         $question->save(false);
 
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $this->redirect(['view', 'id' => $question->id]);
     }
 }

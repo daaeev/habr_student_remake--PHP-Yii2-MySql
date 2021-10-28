@@ -41,7 +41,7 @@ class UserController extends Controller
             $user = $this->findModel($attributes['user_id']);
 
             RoleHelper::setUserRole($attributes['role'], $attributes['user_id']);
-            RoleHelper::setUserStatus($user, $roles, $attributes['role']);
+            RoleHelper::setUserStatus($user, $roles, $attributes['role'], $attributes['ban_reason']);
 
             return $this->redirect(['/admin/user/view', 'id' => $attributes['user_id']]);
         }
@@ -55,6 +55,6 @@ class UserController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Пользователь не найден');
     }
 }

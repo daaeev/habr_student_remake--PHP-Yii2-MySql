@@ -19,7 +19,7 @@ class RoleHelper
     /*
        Defining and setting the status field in the user table
     */
-    public static function setUserStatus(User $user, array $roles = null, string $form_role = null)
+    public static function setUserStatus(User $user, array $roles = null, string $form_role = null, $ban_reason = '')
     {
         /*
            If an array of roles is passed, then we define the status and assign,
@@ -30,6 +30,7 @@ class RoleHelper
             foreach ($roles as $role) {
                 if ($form_role == $role) {
                     $user->status = $status;
+                    $user->ban_reason = $ban_reason;
                     $user->save(false);
                     
                     return;
