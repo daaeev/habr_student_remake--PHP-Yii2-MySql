@@ -95,12 +95,13 @@ class QuestionHelper extends HelperClass
             return 2;
     }
 
-    public static function getChildrenComments($comments, $childComments)
+    public static function getChildrenComments($answersGroup, $childComments)
     {
         $answers = [];
-        foreach ($comments as $comment)
-            if ($comment->comment_kind == 2 || $comment->comment_kind == 4)
-                $answers[] = $comment;
+        foreach ($answersGroup as $GroupAnswers)
+            foreach ($GroupAnswers as $answer)
+                if ($answer->comment_kind == 2 || $answer->comment_kind == 4)
+                    $answers[] = $answer;
 
         foreach ($answers as $answer) {
             foreach ($childComments as $comment) {
