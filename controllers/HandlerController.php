@@ -11,10 +11,11 @@ use yii\web\MethodNotAllowedHttpException;
 use app\models\UserToQuestionSub;
 use app\models\UserToCommentLike;
 use app\models\UserToTagSub;
-use yii\base\InvalidValueException;
+use yii\web\HttpException;
 use app\filters\NeededForAllVariables;
 use app\models\Question;
 use app\models\Tags;
+use app\components\comments\CommentHelper;
 
 /*
    Class for handling ajax requests
@@ -41,7 +42,8 @@ class HandlerController extends Controller
 
                     return $model->createRelation($comment_id);
                 }
-            } else throw new InvalidValueException('На обработку получены некорректные данные');
+            } else 
+                throw new HttpException('На обработку получены некорректные данные');
         }
         
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
@@ -60,7 +62,8 @@ class HandlerController extends Controller
 
                     return $model->createRelation($question_id);
                 }
-            } else throw new InvalidValueException('На обработку получены некорректные данные');
+            } else 
+                throw new HttpException('На обработку получены некорректные данные');
         }
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
@@ -79,7 +82,8 @@ class HandlerController extends Controller
 
                     return $model->createRelation($tag_id);
                 }
-            } else throw new InvalidValueException('На обработку получены некорректные данные');
+            } else 
+                throw new HttpException('На обработку получены некорректные данные');
         }
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
@@ -92,7 +96,7 @@ class HandlerController extends Controller
             if ($model->isAuthor(Yii::$app->view->params['user'])) 
                 return $model->delete();
             else 
-                throw new InvalidValueException('На обработку получены некорректные данные');
+                throw new HttpException('На обработку получены некорректные данные');
         }
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
@@ -110,7 +114,7 @@ class HandlerController extends Controller
 
                 return $comment->save(false);
             } else 
-                throw new InvalidValueException('На обработку получены некорректные данные');
+                throw new HttpException('На обработку получены некорректные данные');
         }
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
@@ -121,9 +125,22 @@ class HandlerController extends Controller
         if (Yii::$app->request->isAjax) {
             $model = Comments::findOne($comment_id);
             if ($model) 
-                return QuestionHelper::complain($model);
+                return CommentHelper::complain($model);
             else 
-                throw new InvalidValueException('На обработку получены некорректные данные');
+                throw new HttpException('На обработку получены некорректные данные');
+        }
+
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
+
+    public function actionApproveAnswer($comment_id)
+    {
+        if (Yii::$app->request->isAjax) {
+            $model = Comments::findOne($comment_id);
+            if ($model) 
+                return CommentHelper::approveAnswer($model);
+            else 
+                throw new HttpException('На обработку получены некорректные данные');
         }
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');

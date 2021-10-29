@@ -14,12 +14,13 @@ use app\components\lib\HelperClass;
 class QuestionHelper extends HelperClass
 {
     /*
-       Divides comments into 3 groups
+       Divides comments into 4 groups
     */
     public static function splitComments($comments)
     {
         $mainComments = [];
         $answers = [];
+        $approveAnswers = [];
         $commentsToAnswers = [];
 
         foreach ($comments as $comment) {
@@ -33,23 +34,13 @@ class QuestionHelper extends HelperClass
                 case 3:
                     $commentsToAnswers[] = $comment;
                     break;
+                case 4:
+                    $approveAnswers[] = $comment;
+                    break;
             }
         }
 
-        return compact('mainComments', 'answers', 'commentsToAnswers');
-    }
-
-    /*
-       Checking for the existence of a record in a linked table (UserToCommentLike, UserToQuestionSub, UserToQuestionViews, UserToQuestionComplain)
-    */
-    public static function existCheck($linkName, $data)
-    {
-        return $linkName::find()
-            ->where([
-                array_key_first($data) => $data[array_key_first($data)], 
-                'user_id' => Yii::$app->user->getId()
-            ])
-            ->exists();
+        return compact('mainComments', 'answers', 'commentsToAnswers', 'approveAnswers');
     }
 
     /*
@@ -104,8 +95,13 @@ class QuestionHelper extends HelperClass
             return 2;
     }
 
-    public static function getChildrenComments($answers, $childComments)
+    public static function getChildrenComments($comments, $childComments)
     {
+        $answers = [];
+        foreach ($comments as $comment)
+            if ($comment->comment_kind == 2 || $comment->comment_kind == 4)
+                $answers[] = $comment;
+
         foreach ($answers as $answer) {
             foreach ($childComments as $comment) {
                 if ($comment->parent_comment_id == $answer->id) {
@@ -117,25 +113,9 @@ class QuestionHelper extends HelperClass
 
     public static function checkUserHaveAnswer($user, $answers)
     {
-        foreach ($answers as $answer) {
-            if ($answer->isAuthor($user))
-                return true;
-        }
-    }
-
-    public static function complain($comment)
-    {
-        if (
-            !self::existCheck(UserToCommentComplaint::class, ['comment_id' => $comment->id])
-            && !$comment->isAuthor(Yii::$app->view->params['user'])
-        ) {
-            $comment->updateCounters(['complaints' => 1]);
-
-            $linkModel = new UserToCommentComplaint;
-            $linkModel->user_id = Yii::$app->view->params['user']->id;
-            $linkModel->comment_id = $comment->id;
-
-            return $linkModel->save();
-        }
+        foreach ($answers as $answerGroup) 
+            foreach ($answerGroup as $answer)
+                if ($answer->isAuthor($user))
+                    return true;
     }
 }
