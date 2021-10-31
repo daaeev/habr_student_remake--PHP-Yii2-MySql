@@ -4,6 +4,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'language' => 'ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -18,7 +19,7 @@ $config = [
     ],
     'components' => [
         'request' => [
-            'cookieValidationKey' => 'T_wmilelycM96lY97D6wkcstPKJCglEx',
+            'cookieValidationKey' => '',
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -45,22 +46,42 @@ $config = [
         ],
         'db' => $db,
         'urlManager' => [
+            'class' => 'codemix\localeurls\UrlManager',
+            'languages' => ['ru', 'en'],
+            'enableDefaultLanguageUrlCode' => true,
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
                 '' => 'site/index',
-                'questions/<category:\D{3,11}>' => 'site/index',
+                'questions/<category:\D{0,11}>' => 'site/index',
                 'my/<category:\D{0,11}>' => 'site/my',
                 'q/<id:\d+>' => 'site/single',
                 'tags' => 'site/tags',
-                't/<id:\d+>' => 'site/tag',
+                't/<id:\d+>/<category:\D{0,11}>' => 'site/tag',
                 'ask' => 'site/create-question',
-                'profile' => 'site/profile',
+                'profile/<id:\d+>/<chapter:\D{0,11}>' => 'site/profile',
                 'login' => 'authorization/login',
                 'registration' => 'authorization/registration',
                 'logout' => 'authorization/logout',
             ],
+            'ignoreLanguageUrlPatterns' => [
+                '#handler/sub-question#' => '#handler/sub-question#',
+                '#handler/like#' => '#handler/like#',
+                '#handler/sub-tag#' => '#handler/sub-tag#',
+                '#handler/delete-comment#' => '#handler/delete-comment#',
+                '#handler/comment-edit#' => '#handler/comment-edit#',
+                '#handler/complain#' => '#handler/complain#',
+                '#handler/approve-answer#' => '#handler/approve-answer#',
+            ],
         ],
+        'i18n' => [
+            'translations' => [
+                'main' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'sourceLanguage' => 'ru',
+                ]
+            ]
+        ]
     ],
 ];
 
