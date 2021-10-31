@@ -16,6 +16,7 @@ use app\filters\NeededForAllVariables;
 use app\models\Question;
 use app\models\Tags;
 use app\components\comments\CommentHelper;
+use app\models\User;
 
 /*
    Class for handling ajax requests
@@ -89,10 +90,10 @@ class HandlerController extends Controller
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
     }
 
-    public function actionDeleteComment($comment_id)
+    public function actionDeleteComment($object_type, $object_id)
     {
         if (Yii::$app->request->isAjax) {
-            $model = Comments::findOne($comment_id);
+            $model = $object_type::findOne($object_id);
             if ($model->isAuthor(Yii::$app->view->params['user'])) 
                 return $model->delete();
             else 
@@ -139,6 +140,19 @@ class HandlerController extends Controller
             $model = Comments::findOne($comment_id);
             if ($model) 
                 return CommentHelper::approveAnswer($model);
+            else 
+                throw new HttpException('На обработку получены некорректные данные');
+        }
+
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
+
+    public function actionSetDescription($description, $author_id)
+    {
+        if (Yii::$app->request->isAjax) {
+            $model = User::findOne($author_id);
+            if ($model)
+                return $model->setDescription($description);
             else 
                 throw new HttpException('На обработку получены некорректные данные');
         }
