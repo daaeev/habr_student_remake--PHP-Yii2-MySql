@@ -13,7 +13,7 @@ use app\components\questions\QuestionHelper;
 use app\models\CommentsPosting;
 use app\filters\NeededForSiteVariables;
 use app\components\user\UserGetHelper;
-use yii\web\NotFoundHttpException;
+use yii\web\HttpException;
 
 class SiteController extends Controller
 {
@@ -101,21 +101,25 @@ class SiteController extends Controller
 
     public function actionCreateQuestion()
     {
-        $model = new AskForm;
+        $user = Yii::$app->vive->params['user'];
+        
+        if ($user->status == 3)
+            throw new HttpException(403, 'Вы забанены: ' . $user->ban_reason);
 
-        if ($model->load(Yii::$app->request->post(), 'AskForm') && $model->createQuestion()) {
-            return $this->redirect(UrlGenHelper::home());
+        if ($user->canAskByTime()) {
+            $model = new AskForm;
+
+            if ($model->load(Yii::$app->request->post(), 'AskForm') && $model->createQuestion()) {
+                return $this->redirect(UrlGenHelper::home());
+            }
+
+            return $this->render('ask_question', compact('model'));
         }
-
-        return $this->render('ask_question', compact('model'));
     }
 
     public function actionProfile($id, $chapter)
     {
         $user = UserGetHelper::userById($id);
-
-        if (!$user)
-            throw new NotFoundHttpException('Пользователь не найден');
 
         return $this->render('profile', compact('user', 'chapter'));
     }

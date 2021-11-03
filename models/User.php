@@ -2,14 +2,16 @@
 
 namespace app\models;
 
-use app\components\ImageInterface;
+use app\components\user\UserHelper;
+use yii\helpers\Html;
+use yii\web\HttpException;
 use yii\web\IdentityInterface;
-use Yii;
+use yii\web\MethodNotAllowedHttpException;
 
-class User extends \yii\db\ActiveRecord implements 
-    IdentityInterface,
-    ImageInterface
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
+    use \app\components\behaviors\GetImageBehavior;
+
     public static function tableName()
     {
         return 'user';
@@ -18,7 +20,8 @@ class User extends \yii\db\ActiveRecord implements
     public function rules()
     {
         return [
-            ['image', 'default', 'value' => 'author.png'],
+            ['image', 'default', 'value' => 'author.jpg'],
+            [['can_ask_time'], 'default', 'value' => time()],
         ];
     }
 
@@ -31,12 +34,36 @@ class User extends \yii\db\ActiveRecord implements
             'email' => 'Email',
             'password' => 'Password',
             'status' => 'Status',
+            'description' => 'Description',
+            'ban_reason' => 'Ban Reason',
+            'contribution' => 'Contribution',
+            'can_ask_time' => 'Can ask time',
         ];
     }
 
-    public function getImage(): string
+    public function setDescription($description)
     {
-        return Yii::getAlias('@web') . 'uploads/users/' . $this->image;
+        $this->description = $description;
+        $this->save(false);
+    }
+
+    public function updateAskTime()
+    {
+        $this->can_ask_time = UserHelper::generateTime($this);
+        $this->save(false);
+    }
+
+    public function canAskByTime()
+    {
+        if ($this->can_ask_time < time())
+            return true;
+
+        throw new HttpException(400, 'Вы сможете задать следующий вопрос через ' . UserHelper::translateTime($this->can_ask_time));
+    }
+
+    public function updateContribution($num)
+    {
+        $this->updateCounters(['contribution' => $num]);
     }
 
     public static function findIdentity($id)
@@ -87,5 +114,10 @@ class User extends \yii\db\ActiveRecord implements
     public function getUserToTagSubs()
     {
         return $this->hasMany(UserToTagSub::class, ['user_id' => 'id']);
+    }
+
+    public function getUserToCommentComplaints()
+    {
+        return $this->hasMany(UserToCommentComplaint::class, ['user_id' => 'id']);
     }
 }

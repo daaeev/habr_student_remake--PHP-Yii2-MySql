@@ -4,7 +4,8 @@ namespace app\models;
 
 use yii\base\Model;
 use app\models\Question;
-use app\components\QuestionHtmlGen;
+use app\components\questions\QuestionHtmlGen;
+use Yii;
 
 class AskForm extends Model 
 {
@@ -34,12 +35,15 @@ class AskForm extends Model
     */
     private function saveInDb()
     {
+        $user = Yii::$app->view->params['user']->id;
+
         $question = new Question;
         $question->title = $this->essence;
         $question->content = QuestionHtmlGen::contentProcessing($this->content);
         $question->tags = $this->tags;
-        $question->author_id = \Yii::$app->user->getId();
+        $question->author_id = $user->id;
         $question->difficulty = $this->difficulty;
+        $user->updateAskTime();
         if ($question->save()) {
             return true;
         }
@@ -48,10 +52,10 @@ class AskForm extends Model
     public function attributeLabels()
     {
         return [
-            'essence' => 'Суть вопроса',
-            'tags' => 'Теги',
-            'difficulty' => 'Сложность',
-            'content' => 'Детали вопроса',
+            'essence' => Yii::t('main', 'Суть вопроса'),
+            'tags' => Yii::t('main', 'Теги'),
+            'difficulty' => Yii::t('main', 'Сложность'),
+            'content' => Yii::t('main', 'Детали вопроса'),
         ];
     }
 }
