@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\components\user\UserHelper;
+use Yii;
 use yii\helpers\Html;
 use yii\web\HttpException;
 use yii\web\IdentityInterface;
@@ -64,6 +65,15 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function updateContribution($num)
     {
         $this->updateCounters(['contribution' => $num]);
+    }
+
+    public function changePass()
+    {
+        $password = substr($this->password, rand(0, 5), rand(15, 20));
+        $this->password = Yii::$app->getSecurity()->generatePasswordHash($password);
+        $this->save(false);
+
+        return $password;
     }
 
     public static function findIdentity($id)

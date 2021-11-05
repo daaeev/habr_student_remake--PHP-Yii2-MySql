@@ -163,4 +163,26 @@ class HandlerController extends Controller
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
     }
+
+    public function actionForgotPassword($username, $email)
+    {
+        if (Yii::$app->request->isAjax) {
+            $model = User::find()->where(['name' => $username, 'email' => $email])->one();
+
+            if ($model) {
+                $user_new_pass = $model->changePass();
+
+                Yii::$app->mailer->compose()
+                    ->setFrom('') // Specify gmail
+                    ->setTo($email)
+                    ->setSubject(Yii::t('main', 'Сброс пароля'))
+                    ->setTextBody(Yii::t('main', 'Ваш новый пароль - ') . $user_new_pass)
+                    ->send();
+            }
+
+            return true;
+        }
+
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
 }

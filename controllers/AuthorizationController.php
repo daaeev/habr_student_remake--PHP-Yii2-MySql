@@ -9,11 +9,32 @@ use app\models\UserRegistration;
 use app\models\UserLogin;
 use app\models\User;
 use app\models\Auth;
+use yii\filters\AccessControl;
 
 class AuthorizationController extends Controller
 {
     public $layout = 'auth';
 
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['login', 'registration', 'forgot', 'onAuthSuccess'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['logout'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
     
     public function actions()
     {
@@ -33,6 +54,11 @@ class AuthorizationController extends Controller
         }
 
         return $this->render('login', compact('model'));
+    }
+
+    public function actionForgot()
+    {
+        return $this->render('forgot');
     }
 
     /*
@@ -60,7 +86,7 @@ class AuthorizationController extends Controller
                 } else {
                     $password = Yii::$app->security->generateRandomString(6);
                     $user = new User([
-                        'username' => $attributes['login'],
+                        'name' => $attributes['login'],
                         'email' => $attributes['email'],
                         'password' => $password,
                     ]);
