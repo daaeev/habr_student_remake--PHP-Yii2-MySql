@@ -9,6 +9,7 @@ use app\models\UserRegistration;
 use app\models\UserLogin;
 use app\models\User;
 use app\models\Auth;
+use app\models\ChangePassword;
 use yii\filters\AccessControl;
 
 class AuthorizationController extends Controller
@@ -23,12 +24,12 @@ class AuthorizationController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['login', 'registration', 'forgot', 'onAuthSuccess'],
+                        'actions' => ['login', 'registration', 'forgot', 'on-auth-success'],
                         'roles' => ['?'],
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'change-password'],
                         'roles' => ['@'],
                     ],
                 ],
@@ -130,6 +131,13 @@ class AuthorizationController extends Controller
         }
 
         return $this->render('registration', compact('model'));
+    }
+
+    public function actionChangePassword()
+    {
+        $model = new ChangePassword;
+
+        return $this->render('change', compact('model'));
     }
 
     public function actionLogout()

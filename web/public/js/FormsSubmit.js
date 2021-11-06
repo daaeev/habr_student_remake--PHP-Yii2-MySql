@@ -69,3 +69,26 @@ $('.forgot_form_block form').on('submit', function (e) {
         error: error,
     });
 })
+
+// Change password form
+$('.change_form_block form').on('beforeSubmit', function () {
+    let old_password = $(this).children('.field').children('.old_pass').children('input').val();
+    let new_password = $(this).children('.field').children('.new_pass').children('input').val();
+
+    $.ajax({
+        url: '/handler/change-password',
+        method: 'get',
+        dataType: 'html',
+        data: {old_pass: old_password, new_pass: new_password},
+        success: function () {
+            window.location.href = '/';
+        },
+        error: function () {
+            alert('Password mismatch');
+            error();
+        },
+    });
+})
+$('.change_form_block form').on('submit', function (e) {
+    e.preventDefault();
+})

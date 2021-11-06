@@ -185,4 +185,22 @@ class HandlerController extends Controller
 
         throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
     }
+
+    public function actionChangePassword($old_pass, $new_pass)
+    {
+        if (Yii::$app->request->isAjax) {
+            $user = Yii::$app->view->params['user'];
+            
+            if (Yii::$app->getSecurity()->validatePassword($old_pass, $user->password)) {
+                $user->password = Yii::$app->getSecurity()->generatePasswordHash($new_pass);
+                $user->save(false);
+
+                return true;
+            }
+
+            throw new HttpException(400, 'На обработку получены некорректные данные');
+        }
+
+        throw new MethodNotAllowedHttpException('Ошибка! Данная страница не подерживает такой вид запроса');
+    }
 }
