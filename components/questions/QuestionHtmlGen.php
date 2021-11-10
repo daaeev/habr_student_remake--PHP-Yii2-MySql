@@ -6,12 +6,13 @@ use app\components\UrlGenHelper;
 use app\components\questions\QuestionHelper;
 use app\models\UserToCommentLike;
 use app\models\UserToQuestionSub;
-use yii\helpers\Html;
+use app\components\lib\HtmlGenHelper;
+use Yii;
 
 /*
    Helper class for generating html code for questions
 */
-class QuestionHtmlGen
+class QuestionHtmlGen extends HtmlGenHelper
 {
     public static function tagLinkGen($question)
     {
@@ -39,37 +40,47 @@ class QuestionHtmlGen
     {
         $count = count($question->userToQuestionSubs);
         
-        return $count . ' ' . QuestionHelper::numToWord($count, ['подписчик', 'подписчика', 'подписчиков']);
+        return $count . ' ' . Yii::t('main', QuestionHelper::numToWord($count, ['подписчик', 'подписчика', 'подписчиков']));
     }
 
     public static function views($question)
     {
         $count = count($question->userToQuestionViews);
 
-        return $count . ' ' . QuestionHelper::numToWord($count, ['просмотр', 'просмотра', 'просмотров']);
+        return $count . ' ' .Yii::t('main',  QuestionHelper::numToWord($count, ['просмотр', 'просмотра', 'просмотров']));
     }
 
-    public static function answers($question)
+    public static function answersCount($question, $link = true)
     {
         $count = 0;
+        $isAnswered = false;
+        $class = 'answers';
+
         foreach ($question->comments as $comment) {
-            if ($comment->comment_kind == 2) {
+            if ($comment->comment_kind == 2 || $comment->comment_kind == 4) 
                 $count++;
-            }
+            
+            if ($isAnswered == false && $comment->comment_kind == 4)
+                $isAnswered = true;
         }
 
-        return '<span>' . $count . '</span> ' . QuestionHelper::numToWord($count, ['ответ', 'ответа', 'ответов']);
+        $class .= ($isAnswered ? ' is-answered' : '');
+        
+        if ($link)
+            return '<a href=' . UrlGenHelper::question($question->id) . ' class="' . $class . '"><span>' . $count . '</span> ' . Yii::t('main', QuestionHelper::numToWord($count, ['ответ', 'ответа', 'ответов'])) . '</a>';
+        
+        return $count . ' ' . Yii::t('main', QuestionHelper::numToWord($count, ['ответ', 'ответа', 'ответов']));
     }
 
     public static function difficulty($difficulty)
     {
         switch ($difficulty) {
             case 'Простой':
-                return '<i class="bi bi-speedometer2 easy"></i>' . $difficulty;
+                return '<i class="bi bi-speedometer2 easy"></i>' . Yii::t('main', $difficulty);
             case 'Средний':
-                return '<i class="bi bi-speedometer2 medium"></i>' . $difficulty;
+                return '<i class="bi bi-speedometer2 medium"></i>' . Yii::t('main', $difficulty);
             case 'Сложный':
-                return '<i class="bi bi-speedometer2 hard"></i>' . $difficulty;
+                return '<i class="bi bi-speedometer2 hard"></i>' . Yii::t('main', $difficulty);
         }
     }
 
@@ -77,9 +88,9 @@ class QuestionHtmlGen
     {
         $count = count($comments);
         if ($count > 0) 
-            $title = '<span>' . $count . '</span>' . ' ' . QuestionHelper::numToWord($count, ['комментарий', 'комментария', 'комментариев']);
+            $title = '<span>' . $count . '</span>' . ' ' . Yii::t('main', QuestionHelper::numToWord($count, ['комментарий', 'комментария', 'комментариев']));
         else
-            $title = 'Комментировать';
+            $title = Yii::t('main', 'Комментировать');
 
         return self::generateButton($class, $title);
     }
@@ -87,13 +98,14 @@ class QuestionHtmlGen
     public static function subscribesButton($question)
     {
         $count = count($question->userToQuestionSubs);
-        $class = 'subscribe-btn ' . $question->id;
+        $class = 'subscribe-btn ' . $question->id . ' subscribe_ques-btn';
+        $sub_title = Yii::t('main', 'Подписаться');
         $title = '';
 
         if ($count > 0) 
-            $title =  'Подписаться ' . '<span>' . $count . '</span>';
+            $title =  $sub_title . ' ' . '<span>' . $count . '</span>';
         else
-            $title = 'Подписаться';
+            $title = $sub_title;
 
         if (QuestionHelper::existCheck(UserToQuestionSub::class, ['question_id' => $question->id])) 
             $class .= ' cl';
@@ -105,12 +117,13 @@ class QuestionHtmlGen
     {
         $count = count($comment->userToCommentLikes);
         $class = 'like-btn';
+        $like_title = Yii::t('main', 'Нравится');
         $title = '';
 
         if ($count > 0) 
-            $title = 'Нравится ' . '<span>' . $count . '</span>';
+            $title = $like_title . ' ' . '<span>' . $count . '</span>';
         else
-            $title = 'Нравится';
+            $title = $like_title;
 
         if (QuestionHelper::existCheck(UserToCommentLike::class, ['comment_id' => $comment->id])) 
             $class .= ' cl';
@@ -122,23 +135,31 @@ class QuestionHtmlGen
        Generation of buttons such as edit, delete, etc.
        $object --> comment or question
     */
-    public static function generateQuestionControlButtons($object, $user, $type = 'comment')
+    public static function generateControlButtons($object, $user, $type = 'comment')
     {
-        if ($object->isAuthor($user)) {
-            $buttons = [
-                'edit' => self::generateButton('control-btn edit-btn', '<i class="bi bi-pencil-fill"></i>'),
-                'delete' => self::generateButton('control-btn delete-btn', '<i class="bi bi-trash-fill"></i>'),
-            ];
+        $buttons = [];
 
-            if ($type == 'question') 
-                unset($buttons['edit']);
-        } else {
-            $buttons = [
-                'complain' => self::generateButton('control-btn complain-btn', '<i class="bi bi-shield-fill-exclamation"></i>'),
-            ];
-            
-            if ($type != 'comment') {
-                $buttons = [];
+        if (@Yii::$app->view->params['user']->status != 3) {
+            if ($object->isAuthor($user)) {
+                $buttons = [
+                    'edit' => self::generateButton('control-btn edit-btn', '<i class="bi bi-pencil-fill"></i>'),
+                    'delete' => self::generateButton('control-btn delete-btn', '<i class="bi bi-trash-fill"></i>'),
+                ];
+
+                if ($type == 'question') 
+                    unset($buttons['edit']);
+            } else {
+                $buttons = [
+                    'complain' => self::generateButton('control-btn complain-btn', '<i class="bi bi-shield-fill-exclamation"></i>'),
+                ];
+                
+                if ($type == 'comment' && $object->comment_kind == 2) {
+                    if ($object->question->author_id == @Yii::$app->view->params['user']->id) 
+                        $buttons['approve'] = self::generateButton('control-btn approve_ques-btn', '<i class="bi bi-check"></i>');
+                }
+
+                if ($type == 'question') 
+                    unset($buttons['complain']);
             }
         }
 
@@ -161,11 +182,6 @@ class QuestionHtmlGen
         foreach ($buttons as $button) {
             echo $button;
         }
-    }
-
-    private static function generateButton($class, $title)
-    {
-        return '<button type="button" class="' . $class . '">' . $title . '</button>';
     }
 
     /*

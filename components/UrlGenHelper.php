@@ -65,4 +65,19 @@ class UrlGenHelper
     {
         return '/t/' . $id . '/interesting';
     }
+
+    public static function userQuestions($user_id)
+    {
+        return '/profile/' . $user_id . '/questions';
+    }
+
+    public static function userAnswers($user_id)
+    {
+        return '/profile/' . $user_id . '/answers';
+    }
+
+    public static function forgotPass()
+    {
+        return '/forgot';
+    }
 }

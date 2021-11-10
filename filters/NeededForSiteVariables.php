@@ -3,7 +3,7 @@
 namespace app\filters;
 
 use yii\base\ActionFilter;
-use app\components\QuestionsGetHelper;
+use app\components\questions\QuestionsGetHelper;
 use Yii;
 
 class NeededForSiteVariables extends NeededForAllVariables

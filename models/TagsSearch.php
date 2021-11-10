@@ -18,7 +18,7 @@ class TagsSearch extends Tags
     {
         return [
             [['id'], 'integer'],
-            [['tag_name', 'tag_image'], 'safe'],
+            [['tag_name', 'image'], 'safe'],
         ];
     }
 
@@ -62,7 +62,7 @@ class TagsSearch extends Tags
         ]);
 
         $query->andFilterWhere(['like', 'tag_name', $this->tag_name])
-            ->andFilterWhere(['like', 'tag_image', $this->tag_image]);
+            ->andFilterWhere(['like', 'image', $this->image]);
 
         return $dataProvider;
     }

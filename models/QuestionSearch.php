@@ -17,7 +17,7 @@ class QuestionSearch extends Question
     public function rules()
     {
         return [
-            [['id', 'author_id', 'status', 'viewed'], 'integer'],
+            [['id', 'author_id', 'status', 'views'], 'integer'],
             [['title', 'content', 'pub_date', 'difficulty'], 'safe'],
         ];
     }
@@ -61,7 +61,6 @@ class QuestionSearch extends Question
             'id' => $this->id,
             'author_id' => $this->author_id,
             'status' => $this->status,
-            'viewed' => $this->viewed,
             'pub_date' => $this->pub_date,
         ]);
 

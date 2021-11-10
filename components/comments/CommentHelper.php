@@ -10,6 +10,7 @@ class CommentHelper extends HelperClass
 {
     public static function complain($comment)
     {
+        // If the user has not complained before and is not the author of the comment, then execute..
         if (
             !self::existCheck(UserToCommentComplaint::class, ['comment_id' => $comment->id])
             && !$comment->isAuthor(Yii::$app->view->params['user'])

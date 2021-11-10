@@ -1,0 +1,23 @@
+@import url('./fonts.css');
+
+.form_bold-btn, .form_italic-btn, .form_underline-btn, .form_crossed-btn, .form_code-btn {
+    font-family: 'RobotoR';
+    font-size: 17px;
+}
+
+.form_bold-btn {
+    font-family: 'Roboto';
+    font-size: 18px;
+}
+
+.form_italic-btn {
+    font-style: italic;
+}
+
+.form_underline-btn {
+    text-decoration: underline;
+}
+
+.form_crossed-btn {
+    text-decoration: line-through;
+}

@@ -6,7 +6,7 @@ use Yii;
 
 class Tags extends \yii\db\ActiveRecord
 {
-    use \app\components\GetImageBehavior;
+    use \app\components\behaviors\GetImageBehavior;
 
     /**
      * {@inheritdoc}

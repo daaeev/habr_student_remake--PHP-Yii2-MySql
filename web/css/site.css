@@ -82,3 +82,15 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+
+.btn-set_role {
+    margin-top: 20px;
+}
+
+.tags-form_btn {
+    margin-top: 10px;
+}
+
+.ban_reason-field {
+    display: none;
+}

@@ -1,5 +1,6 @@
 @import url('fonts.css');
 @import url('aside.css');
+
 body {
     background: #dee1e5;
     margin: 0;
@@ -8,7 +9,7 @@ body {
 
 #content_container {
     display: flex;
-    margin: 0 auto;
+    margin: 0 auto; 
 }
 
 a {

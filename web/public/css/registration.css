@@ -13,13 +13,13 @@ body {
 
 .registration_block {
     background: #ffffff;
-    margin: 90px auto 0 auto;
+    margin: 50px auto 0 auto;
     box-shadow: 0px 2px 8px -3px rgba(34, 60, 80, 0.2);
     padding: 30px;
     box-sizing: border-box;
 }
 
-.registration_block p {
+.registration_block p, .registration_block label {
     font-family: 'Nunito';
     margin: 0;
 }
@@ -32,8 +32,11 @@ body {
     margin-top: 30px;
 }
 
+.registration_block form .field {
+    margin-top: 23px;
+}
+
 .registration_block form input {
-    margin: 10px 0 23px 0;
     border: 1px solid #0000001f;
     padding: 10px;
     width: 94.9%;
@@ -58,7 +61,13 @@ body {
     height: 50px;
     color: #ffffff;
     font-size: 17px;
-    margin-top: 10px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.help-block {
+    color: rgb(221, 69, 69);
+    font-family: 'RobotoR';
 }
 
 /* Authorization link */

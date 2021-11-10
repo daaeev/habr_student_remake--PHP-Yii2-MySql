@@ -1,0 +1,147 @@
+#profile .profile_stats {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 40px;
+}
+
+#profile .profile_stats .user_img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+#profile .profile_stats .username {
+    font-family: 'Roboto';
+    font-size: 25px;
+    margin-top: 15px;
+}
+
+#profile .profile_stats .user_stats_info {
+    display: flex;
+    justify-content: center;
+}
+
+#profile .profile_stats .user_stats_info a {
+    font-family: 'RobotoR';
+    font-size: 17px;
+    padding: 0 10px;
+    width: 69px;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.438);
+    border-right: 1px solid rgba(0, 0, 0, 0.082);
+}
+
+#profile .profile_stats .user_stats_info a:last-child {
+    border-right: none;
+}
+
+#profile .profile_stats .user_stats_info a:first-child {
+    padding: 0 11px;
+}
+
+#profile .profile_stats .user_stats_info a p {
+    color: rgb(45,114,217);
+    font-size: 21px;
+    font-family: 'Nunito';
+    margin: 0;
+}
+
+/* More info links */
+
+#profile .profile_stats .more_info_link_block {
+    align-items: center;
+    display: flex;
+    border-top: 1px solid rgba(0, 0, 0, 0.082);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.055);
+    width: 100%;
+    margin-top: 35px;
+}
+
+#profile .profile_stats .more_info_link_block a {
+    color: rgba(0, 0, 0, 0.301);
+    padding: 8px 0;
+    font-family: 'Roboto';
+    font-weight: bold; 
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-right: 30px;
+    height: 100%;
+}
+
+#profile .profile_stats .more_info_link_block a:hover {
+    color: #000000a9;
+}
+
+#profile .profile_stats .more_info_link_block .active {
+    border-bottom: 1px solid #000000a9;
+    color: #000000a9;
+}
+
+/* CHAPTER about */
+
+#profile .profile_stats .chapter_block {
+    width: 100%;
+}
+
+#profile .profile_stats .chapter_block .edit_description_btn {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#profile .profile_stats .chapter_block .edit_description_btn, #profile .profile_stats .chapter_block .description-form_btn {
+    padding: 3px 7px;
+    border: 1px solid rgb(29, 126, 218);
+    color: rgb(29, 126, 218);
+    border-radius: 3px;
+    font-family: 'Roboto';
+    font-size: 13px;
+    cursor: pointer;
+    background: none;
+}
+
+#profile .profile_stats .chapter_block form {
+    display: none;
+}
+
+#profile .profile_stats .chapter_block input {
+    width: 50%;
+    padding: 5px;
+    border-radius: 3px;
+    outline: none;
+    border: 1px solid rgba(3, 3, 3, 0.514);
+    margin-bottom: 10px;
+}
+
+#profile .profile_stats .chapter_block .description_block, #profile .profile_stats .chapter_block .empty_block {
+    border-bottom: 1px solid #0000007a;
+    margin-bottom: 10.5px;
+}
+
+#profile .profile_stats .chapter_block .description_block .user-description, #profile .profile_stats .chapter_block .empty_block .empty {
+    font-family: 'RobotoR';
+    display: inline-block;
+    font-size: 15px;
+}
+
+/* CHAPTER answers */
+
+#profile .chapter_block .answers_block .answer {
+    border-bottom: 1px solid #00000013;
+}
+
+#profile .chapter_block .answers_block .title {
+    width: 100%;
+    margin: 4px 0;
+}
+
+#profile .chapter_block .answers_block .title a {
+    color: #000000;
+    font-family: 'Nunito';
+    font-size: 20px;
+}
+
+#profile .chapter_block .answers_block .title a:hover {
+    color: #3f82c8;
+    text-decoration: underline;
+}

@@ -6,7 +6,7 @@ use Yii;
 
 class Question extends \yii\db\ActiveRecord
 {
-    use \app\components\AuthorCheckBehavior;
+    use \app\components\behaviors\AuthorCheckBehavior;
     
     public static function tableName()
     {

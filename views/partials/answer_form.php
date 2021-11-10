@@ -2,11 +2,17 @@
 
 use app\components\UrlGenHelper;
 use yii\widgets\ActiveForm;
-use app\components\QuestionHtmlGen;
+use app\components\questions\QuestionHtmlGen;
+use yii\helpers\Url;
 
-if (!\Yii::$app->user->isGuest): 
+if (!Yii::$app->user->isGuest && $this->params['user']->status != 3): 
 ?>
-    <div class="answer_form_block">
+<?php if ($this->beginCache('answer_form', [
+        'variations' => [Yii::$app->language],
+        'duration' => 3600 * 24
+    ])): 
+?>
+    <div class="answer_form_block field_for_auth">
         <a href=<?= UrlGenHelper::user($this->params['user']->id) ?> class="author_img"><img src=<?= $this->params['user']->getImage() ?>></a>
 
         <div class="form_block">
@@ -17,15 +23,21 @@ if (!\Yii::$app->user->isGuest):
                 </div>
 
                 <?php $form = ActiveForm::begin([
-                    'action' => '/site/comment-create?' . 'question_id=' . $question_id,
+                    'action' => Url::to(['comment-create', 'question_id' => $question_id]),
                     'method' => 'POST',
+                    'id' => 'form',
                 ]) ?>
                     <?= $form->field($model, 'content')->textarea()->label('') ?>
-                    <button type="submit">Опубликовать</button>
+                    <button type="submit"><?= Yii::t('main', 'Опубликовать') ?></button>
                 <?php ActiveForm::end() ?>
             </div>
         </div>
     </div>
+<?php $this->endCache(); endif ?>
 <?php else: ?>
-    <p class="auth">Вы не авторизованы! <a href=<?= UrlGenHelper::login() ?>>Войдите</a></p>
+    <?php if (Yii::$app->user->isGuest): ?>
+        <p class="auth">Вы не авторизованы! <a href=<?= UrlGenHelper::login() ?>>Войдите</a></p>
+    <?php else: ?>
+        <p class="auth">Вы забанены: <?= $this->params['user']->ban_reason ?> <a href=<?= UrlGenHelper::logout() ?>>Выйти из учетной записи</a></p>
+    <?php endif ?>
 <?php endif ?>

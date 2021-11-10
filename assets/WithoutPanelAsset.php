@@ -9,9 +9,10 @@ class WithoutPanelAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'public/css/error.css',
-        'public/css/login.css',
-        'public/css/registration.css',
+        'public/css/auth.min.css',
+    ];
+    public $js = [
+        'public/js/auth.min.js',
     ];
 
     public $depends = [

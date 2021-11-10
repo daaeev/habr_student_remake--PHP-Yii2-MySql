@@ -2,10 +2,16 @@
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use app\components\questions\QuestionHtmlGen;
 
 ?>
 <content id="ask">
-    <p class="upper-title_ask">Новый вопрос</p>
+<?php if ($this->beginCache('ask_form', [
+        'variations' => [Yii::$app->language],
+        'duration' => 3600 * 24
+    ])): 
+?>
+    <p class="upper-title_ask"><?= Yii::t('main', 'Новый вопрос') ?></p>
 
     <?php $form = ActiveForm::begin([
         'options' => [
@@ -13,44 +19,49 @@ use yii\helpers\Html;
         ],
     ]) ?>
         <div class="field_block">
-            <p class="field-label">Суть вопроса</p>
-            <span class="field-prompt">Сформулируйте вопрос так, чтобы сразу было понятно, о чём речь</span>
-            <?= $form->field($model, 'essence')->input('text', ['class' => 'field', 'autocomplete' => 'off']) ?>
+            <p class="field-label"><?= Yii::t('main', 'Суть вопроса') ?></p>
+            <span class="field-prompt"><?= Yii::t('main', 'Сформулируйте вопрос так, чтобы сразу было понятно, о чём речь') ?></span>
+            <?= $form->field($model, 'essence')->input('text', ['class' => 'field', 'autocomplete' => 'off'])->label('') ?>
         </div>
 
         <div class="field_block">
-            <p class="field-label">Теги вопроса</p>
-            <span class="field-prompt">Укажите через запятую от 1 до 5 тегов — предметных областей</span>
-            <?= $form->field($model, 'tags')->input('text', ['class' => 'field', 'autocomplete' => 'off']) ?>
+            <p class="field-label"><?= Yii::t('main', 'Теги вопроса') ?></p>
+            <span class="field-prompt"><?= Yii::t('main', 'Укажите через запятую от 1 до 5 тегов — предметных областей') ?></span>
+            <?= $form->field($model, 'tags')->input('text', ['class' => 'field', 'autocomplete' => 'off'])->label('') ?>
         </div>
 
         <div class="field_block">
-            <p class="field-label">Сложность вопроса</p>
+            <p class="field-label"><?= Yii::t('main', 'Сложность вопроса') ?></p>
             <?= 
                 $form->field($model, 'difficulty')->dropDownList([
-                    'Простой' => 'Простой', 
-                    'Средний' => 'Средний', 
-                    'Сложный' => 'Сложный',
+                    'Простой' => Yii::t('main', 'Простой'), 
+                    'Средний' => Yii::t('main', 'Средний'), 
+                    'Сложный' => Yii::t('main', 'Сложный'),
                 ],
-                    ['class' => 'field list']) 
+                    ['class' => 'field list'])->label('')
             ?>
         </div>
 
         <div class="field_block">
-            <p class="field-label">Детали вопроса</p>
-            <span class="field-prompt">Опишите в подробностях свой вопрос, чтобы получить более точный ответ.</span>
+            <p class="field-label"><?= Yii::t('main', 'Детали вопроса') ?></p>
+            <span class="field-prompt"><?= Yii::t('main', 'Опишите в подробностях свой вопрос, чтобы получить более точный ответ.') ?></span>
             <div class="form">
                 <div class="form_helper">
-                    <?= Html::button('B') ?>
-                    <?= Html::button('B') ?>
-                    <?= Html::button('B') ?>
+                    <?= QuestionHtmlGen::generateFormHelpButtons() ?>
                 </div>
+                
+                <div id="form">
+                    
+                    <?= $form->field($model, 'content', [
+                        'options' => ['class' => 'form_help_block form-group field-askform-content required has-error']
+                    ])->textarea()->label('') ?>
 
-                <div class="form_help_block">
-                    <?= $form->field($model, 'content')->textarea() ?>
-                    <?= Html::submitButton('Опубликовать') ?>
+                    <div class="form_help_block">
+                        <?= Html::submitButton(Yii::t('main', 'Опубликовать')) ?>
+                    </div>
                 </div>
             </div>
         </div>
     <?php ActiveForm::end() ?> 
+<?php $this->endCache(); endif ?>
 </content>

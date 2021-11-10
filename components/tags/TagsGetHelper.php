@@ -17,8 +17,8 @@ class TagsGetHelper extends GetHelperClass
         ->with('questionToTagTags', 'userToTagSubs')
         ->orderBy('id DESC');
 
-    $data = self::getPaginationData($tags_query);
+        $data = self::getPaginationData($tags_query);
     
-    return $data;
+        return $data;
     }
 }

@@ -72,7 +72,7 @@ class TagModel extends Model
     {
         $tag = new Tags;
         $tag->tag_name = $this->tag_name;
-        $tag->tag_image = $file_name;
+        $tag->image = $file_name;
 
         $tag->save(); 
     }

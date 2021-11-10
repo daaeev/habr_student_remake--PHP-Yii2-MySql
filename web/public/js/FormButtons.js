@@ -1,5 +1,5 @@
 function addTagToTextarea(tag, button) {
-    let textarea = button.parent('.form_helper').siblings('form').children('.form-group').children('textarea');
+    let textarea = button.parent('.form_helper').siblings('#form').children('.form-group').children('textarea');
     textarea.text(textarea.text() + tag);
 }
 

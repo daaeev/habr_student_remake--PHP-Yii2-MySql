@@ -98,8 +98,8 @@ class QuestionHelper extends HelperClass
     public static function getChildrenComments($answersGroup, $childComments)
     {
         $answers = [];
-        foreach ($answersGroup as $GroupAnswers)
-            foreach ($GroupAnswers as $answer)
+        foreach ($answersGroup as $group)
+            foreach ($group as $answer)
                 if ($answer->comment_kind == 2 || $answer->comment_kind == 4)
                     $answers[] = $answer;
 

@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?php if (\Yii::$app->user->can('assignment')): ?>
+        <?php if (\Yii::$app->user->can('questionModeration')): ?>
         <?=
             Html::a('Approve', ['approve', 'id' => $model->id], [
                 'class' => 'btn btn-success',
@@ -33,11 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
 
         <?=
-            Html::a('Ban', ['ban', 'id' => $model->id], [
+            Html::a('Ban', ['ban-page', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => 'Are you sure?',
-                ],
             ]);
         ?>
         <?php endif ?>
@@ -51,8 +48,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'content:ntext',
             'tags:ntext',
             'author_id',
+            'views',
             'status',
-            'viewed',
+            'ban_reason',
         ],
     ]) ?>
 

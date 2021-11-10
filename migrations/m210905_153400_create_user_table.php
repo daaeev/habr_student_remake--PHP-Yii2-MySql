@@ -13,6 +13,9 @@ class m210905_153400_create_user_table extends Migration
             'email' => $this->string(),
             'password' => $this->string(),
             'status' => $this->smallInteger()->defaultValue(0),
+            'ban_reason' => $this->text(),
+            'contribution' => $this->integer()->defaultValue(0),
+            'can_ask_time' => $this->bigInteger()->defaultValue(0),
         ]);
     }
 

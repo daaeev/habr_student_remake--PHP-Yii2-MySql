@@ -8,29 +8,35 @@ use yii\bootstrap4\LinkPager;
 
 $questions_data = QuestionsGetHelper::questionsByAuthor($user);
 ?>
-<div class="questions_block">
-    <?php foreach ($questions_data['elements'] as $question): ?>
-        <div class="question">
-            <div class="info_block">
-                <?= QuestionHtmlGen::tagLinkGen($question) ?>
-                <span class="сomplexity"><?= QuestionHtmlGen::difficulty($question->difficulty) ?></span>
+<?php if ($questions_data['elements']): ?>
+    <div class="questions_block">
+        <?php foreach ($questions_data['elements'] as $question): ?>
+            <div class="question">
+                <div class="info_block">
+                    <?= QuestionHtmlGen::tagLinkGen($question) ?>
+                    <span class="сomplexity"><?= QuestionHtmlGen::difficulty($question->difficulty) ?></span>
 
-                <p class="title"><a href=<?= UrlGenHelper::question($question->id) ?>><?= $question->title ?></a></p>
+                    <p class="title"><a href=<?= UrlGenHelper::question($question->id) ?>><?= $question->title ?></a></p>
 
-                <div class="soc_info">
-                    <span class="subscribes"><?= QuestionHtmlGen::subscribes($question) ?></span> |
-                    <span class="pub_date"><?= (new Formatter)->asRelativeTime($question->pub_date) ?></span> |
-                    <span class="viewed"><?= QuestionHtmlGen::views($question) ?></span> 
+                    <div class="soc_info">
+                        <span class="subscribes"><?= QuestionHtmlGen::subscribes($question) ?></span> |
+                        <span class="pub_date"><?= (new Formatter)->asRelativeTime($question->pub_date) ?></span> |
+                        <span class="viewed"><?= QuestionHtmlGen::views($question) ?></span> 
+                    </div>
                 </div>
-            </div>
 
-            <a href=<?= UrlGenHelper::question($question->id) ?> class="answers"><?= QuestionHtmlGen::answers($question) ?></a>
-        </div>
-    <?php endforeach ?>
-            
-    <?=
-        LinkPager::widget([
-            'pagination' => $questions_data['pagination'],
-        ]); 
-    ?>
-</div>
+                <a href=<?= UrlGenHelper::question($question->id) ?> class="answers"><?= QuestionHtmlGen::answersCount($question) ?></a>
+            </div>
+        <?php endforeach ?>
+                
+        <?=
+            LinkPager::widget([
+                'pagination' => $questions_data['pagination'],
+            ]); 
+        ?>
+    </div>
+<?php else: ?>
+    <div class="empty_block">
+        <p class="empty"><?= Yii::t('main', 'Пользователь не оставлял вопросов!') ?></p>
+    </div>
+<?php endif ?>

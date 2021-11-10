@@ -2,8 +2,8 @@
 
 namespace app\models;
 
-use app\components\QuestionHelper;
-use app\components\QuestionHtmlGen;
+use app\components\questions\QuestionHelper;
+use app\components\questions\QuestionHtmlGen;
 use Yii;
 use yii\base\Model;
 
@@ -21,7 +21,7 @@ class CommentsPosting extends Model
     public function attributeLabels()
     {
         return [
-            'content' => 'Поле для ввода комментария',
+            'content' => Yii::t('main', 'Поле для ввода комментария'),
         ];
     }
 

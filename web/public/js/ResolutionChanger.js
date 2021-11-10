@@ -7,6 +7,8 @@ $(document).ready(function () {
 
     $('.login_form_block').css('width', auth_block_width);
     $('.registration_block').css('width', auth_block_width);
+    $('.forgot_form_block').css('width', auth_block_width);
+    $('.change_form_block').css('width', auth_block_width);
     $('.registration_link').css('width', auth_block_width);
     $('.authorization_link').css('width', auth_block_width);
 });

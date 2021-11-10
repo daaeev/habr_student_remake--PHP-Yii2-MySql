@@ -1,0 +1,55 @@
+@import url('fonts.css');
+
+.forgot_form_block {
+    background: #ffffff;
+    margin: 90px auto 0 auto;
+    box-shadow: 0px 2px 8px -3px rgba(34, 60, 80, 0.2);
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.forgot_form_block .title {
+    font-family: 'Nunito';
+    margin: 0;
+    font-size: 25px;
+}
+
+.forgot_form_block .sup-title {
+    font-family: 'Nunito';
+    margin: 0;
+    font-size: 14px;
+}
+
+.forgot_form_block .sup-title::before {
+    content: '*';
+    color: red;
+}
+
+.forgot_form_block form .field {
+    margin-top: 28px;
+}
+
+.forgot_form_block form input {
+    border: 1px solid #0000001f;
+    padding: 10px;
+    width: 94.9%;
+    outline: none;
+    transition: 0.2s;
+}
+
+.forgot_form_block form input:focus {
+    border: 1px solid rgba(56, 136, 255, 0.664);
+}
+
+.forgot_form_block form button {
+    background: #558cb7;
+    border-radius: 3px;
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 50px;
+    color: #ffffff;
+    font-size: 17px;
+    margin-top: 30px;
+    cursor: pointer;
+}

@@ -31,7 +31,7 @@ class TagsController extends Controller
     {
         $tag = $this->findModel($id);
 
-        if ($tag->tag_image != 'tag.jpg') {
+        if ($tag->image != 'tag.jpg') {
             unlink(substr($tag->getImage(), 1));
         }
 
@@ -45,6 +45,6 @@ class TagsController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Тег не найден');
     }
 }

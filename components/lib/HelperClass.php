@@ -2,6 +2,8 @@
 
 namespace app\components\lib;
 
+use Yii;
+
 class HelperClass 
 {
     /*
@@ -24,5 +26,18 @@ class HelperClass
             default: 
                 return($words[2]);
         }
+    }
+
+    /*
+       Checking for the existence of a record in a linked table (UserToCommentLike, UserToQuestionSub, UserToQuestionViews, UserToQuestionComplain)
+    */
+    public static function existCheck($linkName, $data)
+    {
+        return $linkName::find()
+            ->where([
+                array_key_first($data) => $data[array_key_first($data)], 
+                'user_id' => Yii::$app->user->getId()
+            ])
+            ->exists();
     }
 }

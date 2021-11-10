@@ -29,6 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'image',
             'email:email',
             'status',
+            'ban_reason',
+            'contribution',
+            'can_ask_time',
         ],
     ]) ?>
 

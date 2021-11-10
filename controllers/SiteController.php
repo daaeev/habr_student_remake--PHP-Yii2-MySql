@@ -101,7 +101,7 @@ class SiteController extends Controller
 
     public function actionCreateQuestion()
     {
-        $user = Yii::$app->vive->params['user'];
+        $user = Yii::$app->view->params['user'];
         
         if ($user->status == 3)
             throw new HttpException(403, 'Вы забанены: ' . $user->ban_reason);

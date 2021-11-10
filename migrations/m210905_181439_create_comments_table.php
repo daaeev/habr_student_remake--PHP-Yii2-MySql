@@ -11,9 +11,10 @@ class m210905_181439_create_comments_table extends Migration
             'content' => $this->text(),
             'author_id' => $this->integer(),
             'question_id' => $this->integer(),
-            'pub_date' => $this->date(),
+            'pub_date' => $this->integer(),
             'comment_kind' => $this->smallInteger(),
             'parent_comment_id' => $this->integer(),
+            'complaints' => $this->integer()->defaultValue(0),
         ]);
 
         $this->createIndex(

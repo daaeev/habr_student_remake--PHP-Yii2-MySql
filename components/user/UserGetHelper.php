@@ -13,6 +13,7 @@ class UserGetHelper extends GetHelperClass
     {
         $model = User::find()
             ->where(['id' => $id])
+            ->with('questions', 'comments')
             ->one();
         
         /*
@@ -20,22 +21,21 @@ class UserGetHelper extends GetHelperClass
         */
         if ($model) {
             if ($model->status == 3) {
-                throw new NotFoundHttpException($model->ban_reason);
+                throw new NotFoundHttpException('Пользователь забанен: ' . $model->ban_reason);
             }
 
             return $model;
         }
 
-        throw new NotFoundHttpException('Вопрос не найден');
+        throw new NotFoundHttpException('Пользователь не найден');
     }
 
     public static function getAnswers($user_id)
     {
         $query = Comments::find()
             ->cache(100)
-            ->where(['author_id' => $user_id, 'comment_kind' => 2])
-            ->joinWith('userToCommentLikes')
-            ->with('question')
+            ->where(['author_id' => $user_id, 'comment_kind' => [2, 4]])
+            ->with('question', 'userToCommentLikes')
             ->orderBy('id DESC');
 
         $data = self::getPaginationData($query);

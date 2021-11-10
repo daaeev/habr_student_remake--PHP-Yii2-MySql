@@ -9,8 +9,8 @@ use app\components\user\UserHtmlGen;
         <?= $user->id == Yii::$app->view->params['user']->id ? '<button type="button" class="edit_description_btn">' . Yii::t('main', 'Изменить') . '</button>' : '' ?>
     </div>
 <?php else: ?>
-    <div class="description_block">
-        <p class="empty"><?= Yii::t('main', 'Пользователь не оставлял ответов!') ?></p>
+    <div class="empty_block">
+        <p class="empty"><?= Yii::t('main', 'Пользователь ещё не оставил описание!') ?></p>
         <?= $user->id == Yii::$app->view->params['user']->id ? '<button type="button" class="edit_description_btn">' . Yii::t('main', 'Изменить') . '</button>' : '' ?>
     </div>
 <?php endif ?>

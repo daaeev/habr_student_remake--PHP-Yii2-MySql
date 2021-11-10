@@ -14,45 +14,54 @@ use app\models\UserToTagSub;
 */
 class QuestionsGetHelper extends GetHelperClass
 {
+    /*
+       Getting questions for different pages regarding the selected category
+    */
     public static function questionsByCategory($category, $pageName, $user_id = null, $tag_id = null)
     {
         $query = Question::find()
-            ->cache(100)
-            ->where(['!=', 'status', 0]);
+            ->where(['!=', 'status', 0])
+            ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments.userToCommentLikes', 'userToQuestionViews');
 
+        /*
+           Adding query parameters based on the page
+        */
         if ($pageName == 'my'):
             $tags_id_array = UserToTagSub::find()
-                ->select(['id'])
+                ->select(['tag_id'])
                 ->andWhere(['user_id' => $user_id])
                 ->all();
 
-            $query = $query
-                ->joinWith('questionToTagTags tags')
-                ->andWhere(['tags.tag_id' => 36]); // WARNING!!!
+            $query
+                ->joinWith('questionToTagTags tags');
+                
+            foreach ($tags_id_array as $tag_id)
+                $query->andWhere(['tags.tag_id' => $tag_id]);
+
         elseif ($pageName == 'by_tag'):
-            $query = $query
-            ->joinWith('questionToTagTags QuesToTag')
-            ->andWhere(['QuesToTag.tag_id' => $tag_id]);
+            $query
+                ->joinWith('questionToTagTags QuesToTag')
+                ->andWhere(['QuesToTag.tag_id' => $tag_id]);
         endif;
 
+        /*
+           Adding query parameters based on category
+        */
         switch ($category):
             case 'interesting':
-                $query = $query
-                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+                $query
                     ->orderBy('views DESC');
                 break;
 
             case 'new':
-                $query = $query
-                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
+                $query
                     ->orderBy('id DESC');
                 break;
 
             case 'noanswer':
-                $query = $query
+                $query
                     ->joinWith('comments')
-                    ->andWhere(['comments.question_id' => null])
-                    ->with('questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
+                    ->andWhere(['comments.question_id' => null]) 
                     ->orderBy('id DESC');
                 break;
         endswitch;
@@ -68,10 +77,9 @@ class QuestionsGetHelper extends GetHelperClass
     public static function sidebarQuestions()
     {
         $questions = Question::find()
-            ->cache(100)
             ->where(['!=', 'status', 0])
             ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments')
-            ->where(['>=', 'pub_date', new Expression('UNIX_TIMESTAMP(NOW() - INTERVAL 1 DAY)')])
+            ->andWhere(['>=', 'pub_date', new Expression('UNIX_TIMESTAMP(NOW() - INTERVAL 1 DAY)')])
             ->limit(10)
             ->all();
 
@@ -86,7 +94,7 @@ class QuestionsGetHelper extends GetHelperClass
         $model = Question::find()
             ->where(['id' => $id])
             ->andWhere(['!=', 'status', 0])
-            ->with('author', 'comments.author', 'comments.userToCommentLikes', 'questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
+            ->with('author', 'comments.author', 'comments.question', 'comments.userToCommentLikes', 'questionToTagTags.tag', 'userToQuestionSubs', 'userToQuestionViews')
             ->one();
 
         /*
@@ -94,12 +102,10 @@ class QuestionsGetHelper extends GetHelperClass
         */
         if ($model) {
             if ($model->status == 2) {
-                throw new NotFoundHttpException($model->ban_reason);
+                throw new NotFoundHttpException('Вопрос забанен: ' . $model->ban_reason);
             }
 
             return $model;
-        } else {
-            throw new NotFoundHttpException('Вопрос обрабатывается');
         }
 
         throw new NotFoundHttpException('Вопрос не найден');
@@ -108,7 +114,6 @@ class QuestionsGetHelper extends GetHelperClass
     public static function questionsByAuthor($author)
     {
         $query = Question::find()
-            ->cache(100)
             ->where(['!=', 'status', 0])
             ->andWhere(['author_id' => $author->id])
             ->with('questionToTagTags.tag', 'userToQuestionSubs', 'comments', 'userToQuestionViews')
@@ -125,7 +130,6 @@ class QuestionsGetHelper extends GetHelperClass
     public static function similarQuestionsByTag($question_id, $tag_id)
     {
         $questions = Question::find()
-            ->cache(100)
             ->joinWith('questionToTagTags tags')
             ->where(['tags.tag_id' => $tag_id])
             ->andWhere(['!=', 'status', 0])

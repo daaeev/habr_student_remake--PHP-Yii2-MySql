@@ -19,9 +19,10 @@ class m210905_164544_create_questions_table extends Migration
             'content' => $this->string(),
             'author_id' => $this->integer(),
             'status' => $this->smallInteger()->defaultValue(0),
-            'viewed' => $this->integer()->defaultValue(0),
-            'pub_date' => $this->date(),
+            'views' => $this->integer()->defaultValue(0),
+            'pub_date' => $this->integer(),
             'difficulty' => $this->string(),
+            'ban_reason' => $this->string(),
         ]);
 
         $this->createIndex(

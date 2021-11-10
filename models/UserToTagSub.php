@@ -26,6 +26,14 @@ class UserToTagSub extends \yii\db\ActiveRecord
         ];
     }
 
+    public function createRelation($tag_id)
+    {
+        $this->user_id = Yii::$app->view->params['user']->id;
+        $this->tag_id = $tag_id;
+        
+        $this->save();
+    }
+
     /**
      * {@inheritdoc}
      */

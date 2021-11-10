@@ -19,7 +19,9 @@ $config = [
     ],
     'components' => [
         'request' => [
-            'cookieValidationKey' => '',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -52,8 +54,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '' => 'site/index',
                 'questions/<category:\D{0,11}>' => 'site/index',
+                '' => 'site/index',
                 'my/<category:\D{0,11}>' => 'site/my',
                 'q/<id:\d+>' => 'site/single',
                 'tags' => 'site/tags',
@@ -63,6 +65,9 @@ $config = [
                 'login' => 'authorization/login',
                 'registration' => 'authorization/registration',
                 'logout' => 'authorization/logout',
+                'forgot' => 'authorization/forgot',
+                'change' => 'authorization/change-password',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
             ],
             'ignoreLanguageUrlPatterns' => [
                 '#handler/sub-question#' => '#handler/sub-question#',
@@ -72,6 +77,9 @@ $config = [
                 '#handler/comment-edit#' => '#handler/comment-edit#',
                 '#handler/complain#' => '#handler/complain#',
                 '#handler/approve-answer#' => '#handler/approve-answer#',
+                '#handler/set-description#' => '#handler/set-description#',
+                '#handler/forgot-password#' => '#handler/forgot-password#',
+                '#handler/change-password#' => '#handler/change-password#',
             ],
         ],
         'i18n' => [
@@ -81,7 +89,34 @@ $config = [
                     'sourceLanguage' => 'ru',
                 ]
             ]
-        ]
+        ],
+        'authClientCollection' => [
+            'class' => 'yii\authclient\Collection',
+            'clients' => [
+                'google' => [
+                    'class' => 'yii\authclient\clients\Google',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+                'facebook' => [
+                    'class' => 'yii\authclient\clients\Facebook',
+                    'clientId' => '',
+                    'clientSecret' => '',
+                ],
+            ],
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com',
+                'username' => '', // Specify username
+                'password' => '', //Specify password
+                'port' => '587',
+                'encryption' => 'tls',
+            ] 
+        ],
     ],
 ];
 

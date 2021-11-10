@@ -5,7 +5,7 @@ namespace app\filters;
 use Yii;
 use yii\base\ActionFilter;
 use app\models\UserToQuestionViews;
-use app\components\QuestionHelper;
+use app\components\questions\QuestionHelper;
 use app\models\Question;
 
 class ViewsCountFilter extends ActionFilter

@@ -4,7 +4,7 @@ namespace app\models;
 
 class Comments extends \yii\db\ActiveRecord
 {
-    use \app\components\AuthorCheckBehavior;
+    use \app\components\behaviors\AuthorCheckBehavior;
     public $childComments = [];
 
     public static function tableName()
