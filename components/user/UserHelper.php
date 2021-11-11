@@ -40,5 +40,7 @@ class UserHelper extends HelperClass
             $time_to_can_ask += (3600 * 5);
         else
             $time_to_can_ask += (3600);
+        
+        return $time_to_can_ask;
     }
 }

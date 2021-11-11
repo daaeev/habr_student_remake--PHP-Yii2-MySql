@@ -35,7 +35,7 @@ class AskForm extends Model
     */
     private function saveInDb()
     {
-        $user = Yii::$app->view->params['user']->id;
+        $user = Yii::$app->user->identity;
 
         $question = new Question;
         $question->title = $this->essence;
