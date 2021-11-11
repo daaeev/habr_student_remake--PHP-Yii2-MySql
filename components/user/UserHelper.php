@@ -3,6 +3,7 @@
 namespace app\components\user;
 
 use app\components\lib\HelperClass;
+use yii\i18n\Formatter;
 
 class UserHelper extends HelperClass
 {
@@ -21,7 +22,7 @@ class UserHelper extends HelperClass
     {
         $time_to_can_ask = $user_timestamp - time();
         
-        return date('H часов i минут s секунд', $time_to_can_ask);
+        return (new Formatter)->asDuration($time_to_can_ask, ' ');
     }
 
     public static function generateTime($user)
