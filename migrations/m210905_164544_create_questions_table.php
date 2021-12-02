@@ -18,6 +18,7 @@ class m210905_164544_create_questions_table extends Migration
             'content' => $this->text(),
             'content' => $this->string(),
             'author_id' => $this->integer(),
+            'tags' => $this->string()->defaultValue(''),
             'status' => $this->smallInteger()->defaultValue(0),
             'views' => $this->integer()->defaultValue(0),
             'pub_date' => $this->integer(),
