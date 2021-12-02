@@ -6,10 +6,11 @@ function error() {
 /*
    Profile description form submit
 */
-$('#profile .profile_stats .chapter_block form').on('submit', function (e) {
+$('#profile #set_user_description_form').on('submit', function (e) {
     e.preventDefault();
     let description = $(this).children('input').val();
     let author = $(this).children('.author').val();
+
     $.ajax({
         url: '/handler/set-description',
         method: 'get',

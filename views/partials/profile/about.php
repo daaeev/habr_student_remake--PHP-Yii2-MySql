@@ -16,7 +16,7 @@ use app\components\user\UserHtmlGen;
 <?php endif ?>
 
 <?php if ($user->id == Yii::$app->view->params['user']->id): ?>
-    <form>
+    <form id="set_user_description_form">
         <input type="text" placeholder = <?= Yii::t('main', 'Введите описание') ?> autocomplete = "off" class="description">
         <input type="hidden" value=<?= $user->id ?> class="author"><br>
         <button type="submit" class="description-form_btn"><?= Yii::t('main', 'Изменить') ?></button>
