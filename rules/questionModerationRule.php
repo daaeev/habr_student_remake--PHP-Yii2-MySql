@@ -7,7 +7,7 @@ use app\models\User;
 
 class questionModerationRule extends Rule
 {
-    public $name = 'questionModerationRule';
+    public $name = 'QuestionModerationRule';
 
     public function execute($user_id, $item, $params)
     {
